@@ -1,0 +1,160 @@
+<title>Agent Dashboard DEMO — fictitious</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{--forest:#263f36;--deep:#172b25;--sage:#789184;--bronze:#a87942;--bronzed:#835b2f;
+--ivory:#f6f1e8;--paper:#fffdf9;--line:#ddd4c6;--ink:#25322d;--muted:#6b7873;
+--ok:#2f6449;--okbg:#e3eee8;--warn:#845d29;--warnbg:#f3e7d2;
+--fd:Georgia,'Times New Roman',serif;--fu:'Segoe UI',system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root{--ivory:#141f1b;--paper:#1c2b26;--line:#31463e;--ink:#eaeeeb;
+--muted:#a3b2aa;--forest:#1c2b26;--deep:#0e1714;--bronze:#c9a271;--bronzed:#dcb989;
+--ok:#84cca4;--okbg:#1e3a2c;--warn:#ddb87c;--warnbg:#3a3020}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ivory);color:var(--ink);font:15px/1.55 var(--fu)}
+.wrap{max-width:660px;margin:0 auto;padding:0 16px 56px}
+.hero{background:linear-gradient(152deg,#2c473d,var(--forest) 42%,var(--deep));color:#fff;
+margin:0 -16px;padding:30px 20px 42px;text-align:left}
+.hero .eb{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#c9a879;margin:0 0 6px}
+.hero h1{font:600 26px/1.2 var(--fd);margin:0;letter-spacing:-.01em}
+.hero .as{font-size:12px;color:#9fb5aa;margin-top:6px}
+.lead{background:var(--paper);border:1px solid var(--line);border-radius:14px;margin-top:-26px;
+padding:20px 22px;box-shadow:0 7px 22px rgba(0,0,0,.07)}
+.lead .per{font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--bronzed);margin:0 0 8px}
+.gap{font:600 34px/1.1 var(--fd);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.gap.done{color:var(--ok)}
+.say{font-size:14.5px;color:var(--muted);margin:8px 0 0}
+.say b{color:var(--ink)}
+.bullet{position:relative;height:16px;background:#e9e2d4;border-radius:8px;overflow:hidden;margin:16px 0 6px}
+@media (prefers-color-scheme:dark){.bullet{background:#2b3d36}}
+.bullet i{position:absolute;left:0;top:2px;bottom:2px;border-radius:6px;background:linear-gradient(90deg,#c8a372,#835b2f)}
+.bullet i.done{background:linear-gradient(90deg,#5e9578,#376c52)}
+.bmeta{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:15px 17px}
+.card .l{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.card .v{font:600 24px/1.2 var(--fd);margin-top:5px;font-variant-numeric:tabular-nums}
+.card .h{font-size:12px;color:var(--muted);margin-top:3px}
+.sec{margin:26px 0 10px;font:600 17px/1.3 var(--fd)}
+.hist{display:flex;gap:5px;align-items:flex-end;height:88px}
+.hcol{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;min-width:0}
+.hcol i{display:block;width:100%;max-width:34px;background:var(--bronze);border-radius:3px 3px 0 0;min-height:2px}
+.hcol i.hit{background:#376c52}
+.hcol span{font-size:10px;color:var(--muted)}
+.hcol.cur span{font-weight:700;color:var(--ink)}
+.dwrap{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:15px 17px;margin-top:10px}
+.dbars{display:flex;gap:2px;align-items:flex-end;height:64px}
+.dcol{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px}
+.dcol i{display:block;width:100%;max-width:18px;background:var(--bronze);border-radius:2px 2px 0 0}
+.dcol span{font-size:8.5px;color:var(--muted)}
+.chips{display:flex;gap:5px;overflow-x:auto;margin:18px 0 4px;padding-bottom:4px}
+.chip{flex:0 0 auto;min-width:52px;min-height:40px;border:1px solid var(--line);border-radius:8px;
+background:var(--paper);color:var(--muted);font:600 12px/1.2 var(--fu);padding:8px 6px;cursor:pointer;text-align:center}
+.chip[aria-pressed="true"]{background:var(--bronze);border-color:var(--bronze);color:#fff}
+.foot{margin-top:30px;padding-top:12px;border-top:1px solid var(--line);font-size:11.5px;color:var(--muted)}
+#gate{position:fixed;inset:0;background:var(--deep);display:flex;align-items:center;justify-content:center;z-index:50}
+#gate .box{background:var(--paper);border-radius:14px;padding:28px 26px;max-width:300px;text-align:center}
+#gate h2{font:600 18px/1.3 var(--fd);margin:0 0 4px;color:var(--ink)}
+#gate p{font-size:12.5px;color:var(--muted);margin:0 0 14px}
+#gate input{width:120px;text-align:center;font:600 22px/1.4 var(--fu);letter-spacing:6px;padding:8px;
+border:1px solid var(--line);border-radius:8px;background:var(--ivory);color:var(--ink)}
+#gate button{display:block;margin:12px auto 0;font:600 13px/1 var(--fu);padding:10px 22px;border-radius:8px;
+border:none;background:var(--bronze);color:#fff;cursor:pointer}
+#gate .err{color:#b23327;font-size:12px;height:16px;margin-top:8px}
+#livetip{display:none;position:fixed;z-index:99;background:var(--deep);color:#fff;
+font:600 12px/1.45 var(--fu);padding:6px 10px;border-radius:6px;pointer-events:none;white-space:nowrap;
+box-shadow:0 6px 18px rgba(0,0,0,.25)}
+</style>
+<div id="gate"><div class="box"><h2>Everbright Casket Services (UT)</h2><p>DEMO — code is 1234</p>
+<input id="pinbox" inputmode="numeric" maxlength="4" autocomplete="off">
+<div class="err" id="pinerr"></div>
+<button id="pingo">Open my dashboard</button></div></div>
+<div class="wrap" id="app" style="visibility:hidden">
+<div class="hero"><p class="eb">DEMO · Personal agent dashboard — fictitious data</p>
+<h1>Everbright Casket Services (UT)</h1><p class="as">Figures to 2026-08-14 · private — your numbers only</p></div>
+<div class="lead" id="lead"></div>
+<div class="cards" id="cards"></div>
+<div class="chips" id="chips"></div>
+<p class="sec">Your months</p><div class="hist" id="hist"></div>
+<p class="sec">Daily sales — <span id="mlab"></span></p>
+<div class="dwrap"><div class="dbars" id="dbars"></div></div>
+<p class="foot">Personal copy for Everbright Casket Services (UT) only. Access code required; do not forward.
+Figures from the verified sales file; incentive figures are indicative — payroll is authoritative.</p>
+</div>
+<div id="livetip"></div>
+<script>
+var P={"kind":"agent","name":"Everbright Casket Services (UT)","el":8,"months":[{"m":1,"name":"January","dim":31,"actual":42000.0,"n":2,"days":{"11":[21000.0,1],"31":[21000.0,1]},"inc_pool":2310.0,"target":null,"blocks":0,"bonanza":0.0,"carry":42000.0,"to_next":18000.0},{"m":2,"name":"February","dim":28,"actual":8000.0,"n":1,"days":{"5":[8000.0,1]},"inc_pool":440.0,"target":null,"blocks":0,"bonanza":0.0,"carry":8000.0,"to_next":52000.0},{"m":3,"name":"March","dim":31,"actual":55000.0,"n":3,"days":{"13":[18333.333333333332,1],"21":[18333.333333333332,1],"2":[18333.333333333332,1]},"inc_pool":3025.0,"target":null,"blocks":0,"bonanza":0.0,"carry":55000.0,"to_next":5000.0},{"m":4,"name":"April","dim":30,"actual":131000.0,"n":8,"days":{"3":[16375.0,1],"27":[16375.0,1],"18":[16375.0,1],"4":[16375.0,1],"12":[16375.0,1],"19":[16375.0,1],"2":[16375.0,1],"30":[16375.0,1]},"inc_pool":7205.0,"target":null,"blocks":2,"bonanza":7776.0,"carry":11000.0,"to_next":49000.0},{"m":5,"name":"May","dim":31,"actual":27000.0,"n":1,"days":{"17":[27000.0,1]},"inc_pool":1485.0,"target":null,"blocks":0,"bonanza":0.0,"carry":27000.0,"to_next":33000.0},{"m":6,"name":"June","dim":30,"actual":64000.0,"n":4,"days":{"7":[16000.0,1],"2":[16000.0,1],"3":[16000.0,1],"14":[16000.0,1]},"inc_pool":3520.0,"target":null,"blocks":1,"bonanza":3888.0,"carry":4000.0,"to_next":56000.0},{"m":7,"name":"July","dim":31,"actual":152000.0,"n":10,"days":{"14":[15200.0,1],"3":[15200.0,1],"8":[15200.0,1],"18":[15200.0,1],"2":[15200.0,1],"27":[15200.0,1],"19":[15200.0,1],"4":[15200.0,1],"31":[15200.0,1],"21":[15200.0,1]},"inc_pool":8360.0,"target":null,"blocks":2,"bonanza":7776.0,"carry":32000.0,"to_next":28000.0},{"m":8,"name":"August","dim":31,"actual":38000.0,"n":2,"days":{"11":[19000.0,1],"10":[19000.0,1]},"inc_pool":2090.0,"target":null,"blocks":0,"bonanza":0.0,"carry":38000.0,"to_next":22000.0}],"as_of":"2026-08-14","block":60000.0,"pay":3888.0};var PIN='1234';
+var SHORT=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function fmt(v){var a=Math.abs(v),s=v<0?'-':'';
+if(a>=1e6)return s+'RM '+(a/1e6).toFixed(2)+'m';
+if(a>=1e3)return s+'RM '+Math.round(a).toLocaleString('en-US');
+return s+'RM '+Math.round(a);}
+function pct(v){return Math.round(v*100)+'%';}
+var CUR=P.el;
+function render(mi){CUR=mi;var M=P.months[mi-1];
+document.querySelectorAll('.chip').forEach(function(c){c.setAttribute('aria-pressed',c.dataset.m==mi?'true':'false');});
+document.getElementById('mlab').textContent=M.name;
+var lead='',cards='';
+if(P.kind==='staff'){
+var t=M.target||0,a=M.actual,gap=Math.max(0,t-a),ach=t>0?a/t:null;
+lead='<p class="per">'+M.name+' — '+(gap<=0&&t>0?'target achieved':'to hit your target')+'</p>'+
+(t>0?(gap<=0?'<div class="gap done">Target hit — '+fmt(a-t)+' over</div>'
+:'<div class="gap">'+fmt(gap)+'</div><p class="say">more to reach your '+fmt(t)+' target — you are at <b>'+pct(ach)+'</b> with <b>'+fmt(a)+'</b> from '+M.n+' sales.</p>')
+:'<div class="gap">'+fmt(a)+'</div><p class="say">from '+M.n+' sales this month (no individual target set).</p>');
+if(t>0){var w=Math.min(ach,1)*100;
+lead+='<div class="bullet"><i style="width:'+w.toFixed(1)+'%" class="'+(ach>=1?'done':'')+'"></i></div>'+
+'<div class="bmeta"><span>'+fmt(a)+'</span><span>target '+fmt(t)+'</span></div>';}
+var hasInc=M.inc_pool>0;
+cards='<div class="card"><div class="l">Incentive pool</div><div class="v">'+(hasInc?fmt(M.inc_pool):'&mdash;')+'</div>'+
+'<div class="h">'+(hasInc?'from your sales this month':'not yet recorded for this month')+'</div></div>'+
+'<div class="card"><div class="l">Incentive earned</div><div class="v">'+(hasInc?fmt(M.earned):'&mdash;')+'</div>'+
+'<div class="h">'+(hasInc?(ach!==null?'at '+pct(Math.max(.5,Math.min(ach,1)))+' payout factor (50% floor, 100% cap)':'50% floor applied'):'appears once incentive is entered in the sales file')+'</div></div>';
+}else{
+var a2=M.actual,blocks=M.blocks,nxt=M.to_next;
+lead='<p class="per">'+M.name+' — Bonanza progress</p>'+
+(blocks>0?'<div class="gap done">'+fmt(M.bonanza)+' earned</div><p class="say">'+blocks+' Bonanza block'+(blocks>1?'s':'')+' banked. '+
+'<b>'+fmt(nxt)+'</b> more sales unlocks the next <b>'+fmt(P.pay)+'</b>.</p>'
+:'<div class="gap">'+fmt(nxt)+'</div><p class="say">more sales to your first '+fmt(P.pay)+' Bonanza of the month — '+
+'you have <b>'+fmt(a2)+'</b> from '+M.n+' sale'+(M.n===1?'':'s')+'.</p>');
+var w2=(M.carry/P.block)*100;
+lead+='<div class="bullet"><i style="width:'+w2.toFixed(1)+'%"></i></div>'+
+'<div class="bmeta"><span>'+fmt(M.carry)+' toward next block</span><span>'+fmt(P.block)+'</span></div>';
+cards='<div class="card"><div class="l">Net sales</div><div class="v">'+fmt(a2)+'</div>'+
+'<div class="h">'+M.n+' sale'+(M.n===1?'':'s')+' this month</div></div>'+
+'<div class="card"><div class="l">Commission</div><div class="v">'+(M.inc_pool>0?fmt(M.inc_pool):'&mdash;')+'</div>'+
+'<div class="h">'+(M.inc_pool>0?'indicative — payroll is authoritative':'not yet recorded this month')+'</div></div>';
+}
+document.getElementById('lead').innerHTML=lead;
+document.getElementById('cards').innerHTML=cards;
+var mx=1;P.months.forEach(function(x){mx=Math.max(mx,x.actual);});
+var h='';P.months.forEach(function(x){
+var hh=Math.max(3,Math.round(x.actual/mx*66));
+var hit=(P.kind==='staff'?(x.target>0&&x.actual>=x.target):(x.blocks>0));
+h+='<div class="hcol'+(x.m===mi?' cur':'')+'" data-tip="'+x.name+' — '+fmt(x.actual)+' · '+x.n+' sales">'+
+'<i style="height:'+hh+'px" class="'+(hit?'hit':'')+'"></i><span>'+SHORT[x.m-1]+'</span></div>';});
+document.getElementById('hist').innerHTML=h;
+var dmx=1;for(var k in M.days)dmx=Math.max(dmx,M.days[k][0]);
+var db='';for(var d=1;d<=M.dim;d++){
+var v=M.days[d]?M.days[d][0]:0;
+var bh=v>0?Math.max(3,Math.round(v/dmx*46)):0;
+db+='<div class="dcol"'+(v>0?' data-tip="'+d+' '+M.name+' — '+fmt(v)+' · '+M.days[d][1]+' sale'+(M.days[d][1]===1?'':'s')+'"':'')+'>'+
+(v>0?'<i style="height:'+bh+'px"></i>':'<i style="height:1px;opacity:.25"></i>')+
+((d===1||d%5===0)?'<span>'+d+'</span>':'')+'</div>';}
+document.getElementById('dbars').innerHTML=db;
+}
+var chips='';P.months.forEach(function(M,i){
+chips+='<button class="chip" data-m="'+(i+1)+'">'+SHORT[i]+'</button>';});
+document.getElementById('chips').innerHTML=chips;
+document.getElementById('chips').addEventListener('click',function(e){
+var b=e.target.closest('.chip');if(b)render(+b.dataset.m);});
+var tip=document.getElementById('livetip');
+document.addEventListener('pointermove',function(e){
+var el=e.target.closest?e.target.closest('[data-tip]'):null;
+if(el){tip.textContent=el.getAttribute('data-tip');tip.style.display='block';
+tip.style.left=Math.min(e.clientX+12,window.innerWidth-160)+'px';tip.style.top=(e.clientY-34)+'px';}
+else tip.style.display='none';},{passive:true});
+function unlock(){var v=document.getElementById('pinbox').value.trim();
+if(v===PIN){document.getElementById('gate').style.display='none';
+document.getElementById('app').style.visibility='visible';render(P.el);}
+else document.getElementById('pinerr').textContent='Wrong code — try again';}
+document.getElementById('pingo').addEventListener('click',unlock);
+document.getElementById('pinbox').addEventListener('keydown',function(e){if(e.key==='Enter')unlock();});
+</script>
