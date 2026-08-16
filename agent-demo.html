@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#172b25">
-<title>Agent Dashboard DEMO — fictitious</title>
+<title>Agent Dashboard DEMO — fictitious data</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Public+Sans:wght@400;500;600;700&display=swap">
@@ -192,6 +192,10 @@ body{margin:0;background:var(--ivory);color:var(--ink);
 .foot{margin-top:32px;padding-top:14px;border-top:1px solid var(--line);
   font:400 12px/1.65 var(--fu);color:var(--muted)}
 
+.brow{display:flex;align-items:center}
+#langbtn{margin-left:auto;flex:0 0 auto;font:600 11px/1 var(--fu);letter-spacing:.06em;color:inherit;
+  background:transparent;border:1px solid currentColor;border-radius:999px;padding:6px 12px;cursor:pointer;opacity:.7}
+#langbtn:hover,#langbtn:focus-visible{opacity:1}
 /* ---------- gate ---------- */
 #gate{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px;
   background:linear-gradient(158deg,var(--hero-a),var(--hero-b) 44%,var(--hero-c))}
@@ -234,9 +238,9 @@ body{margin:0;background:var(--ivory);color:var(--ink);
 <div id="gate">
   <div class="box">
     <span class="mark"><img src="https://www.perpetual.com.my/favicon.ico" alt="" onerror="this.parentNode.style.display='none'"></span>
-    <p class="gb">Private demo dashboard</p>
-    <h2>Everbright Casket Services (UT)</h2>
-    <p>DEMO — the code is 1234.</p>
+    <p class="gb" id="ggb">Demo dashboard</p>
+    <h2>Golden Lotus Memorial (BD)</h2>
+    <p id="gp">DEMO — the code is 1234.</p>
     <label class="sr" for="pinbox">Access code</label>
     <input id="pinbox" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" autofocus>
     <div class="err" id="pinerr" role="alert"></div>
@@ -249,9 +253,10 @@ body{margin:0;background:var(--ivory);color:var(--ink);
     <div class="heroin">
       <div class="brow">
         <span class="mark"><img src="https://www.perpetual.com.my/favicon.ico" alt="" onerror="this.parentNode.style.display='none'"></span>
-        <p class="eb">DEMO · fictitious data</p>
+        <p class="eb" id="eb1">DEMO · Personal agent dashboard — fictitious data</p>
+        <button id="langbtn" type="button" aria-label="Language / 语言">中文</button>
       </div>
-      <h1>Everbright Casket Services (UT)</h1>
+      <h1>Golden Lotus Memorial (BD)</h1>
       <p class="as" id="asof"></p>
       <div class="chipwrap" id="chipwrap" data-od-id="month-selector">
         <div class="chips" id="chips" role="group" aria-label="Choose a month"></div>
@@ -263,35 +268,34 @@ body{margin:0;background:var(--ivory);color:var(--ink);
     <section class="panel lead" id="lead" data-od-id="lead-progress"></section>
     <section class="cards" id="cards" data-od-id="kpi-cards"></section>
 
-    <p class="seclab">Selected month</p>
-    <h2 class="sec">Daily sales — <span id="mlab"></span></h2>
+    <p class="seclab" id="sl1">Selected month</p>
+    <h2 class="sec"><span id="dsl">Daily sales — </span><span id="mlab"></span></h2>
     <section class="panel dwrap" data-od-id="daily-chart">
       <div class="dbody"><div class="dbars" id="dbars"></div></div>
       <div class="daxis" id="daxis"></div>
       <p class="dcap" id="dcap"></p>
     </section>
 
-    <p class="seclab">Your year</p>
-    <h2 class="sec">Sales by month</h2>
-    <p class="secsub">Each dashed line is one RM 60,000 Bonanza block. Tap a month to open it.</p>
+    <p class="seclab" id="sl2">Your year</p>
+    <h2 class="sec" id="sec2">Sales by month</h2>
+    <p class="secsub" id="ssub">Each dashed line is one RM 60,000 Bonanza block. Tap a month to open it.</p>
     <section class="ychart" data-od-id="year-chart">
       <div class="ybody" id="ybody"></div>
       <div class="xaxis" id="xaxis"></div>
       <div class="legend">
-        <span><i class="key b"></i>Sales</span>
-        <span><i class="key g"></i>Block banked</span>
-        <span><i class="key p"></i>Month in progress</span>
-        <span><i class="key l"></i>RM 60,000 block line</span>
+        <span id="lg1"><i class="key b"></i>Sales</span>
+        <span id="lg2"><i class="key g"></i>Block banked</span>
+        <span id="lg3"><i class="key p"></i>Month in progress</span>
+        <span id="lg4"><i class="key l"></i>RM 60,000 block line</span>
       </div>
     </section>
 
     <section class="panel ytd" data-od-id="year-to-date">
-      <p class="eb">Year to date</p>
+      <p class="eb" id="yeb">Year to date</p>
       <div class="ygrid2" id="ytd"></div>
     </section>
 
-    <p class="foot">Personal copy for Everbright Casket Services (UT) only. Access code required; please do not forward.
-    Figures come from the verified sales file; incentive figures are indicative — payroll is authoritative.</p>
+    <p class="foot" id="foot"></p>
   </main>
 </div>
 
@@ -299,8 +303,14 @@ body{margin:0;background:var(--ivory);color:var(--ink);
 <div id="livetip" role="tooltip" aria-hidden="true"></div>
 
 <script>
-var P={"kind":"agent","name":"Everbright Casket Services (UT)","el":8,"months":[{"m":1,"name":"January","dim":31,"actual":42000.0,"n":2,"days":{"11":[21000.0,1],"31":[21000.0,1]},"inc_pool":2310.0,"target":null,"blocks":0,"bonanza":0.0,"carry":42000.0,"to_next":18000.0},{"m":2,"name":"February","dim":28,"actual":8000.0,"n":1,"days":{"5":[8000.0,1]},"inc_pool":440.0,"target":null,"blocks":0,"bonanza":0.0,"carry":8000.0,"to_next":52000.0},{"m":3,"name":"March","dim":31,"actual":55000.0,"n":3,"days":{"13":[18333.333333333332,1],"21":[18333.333333333332,1],"2":[18333.333333333332,1]},"inc_pool":3025.0,"target":null,"blocks":0,"bonanza":0.0,"carry":55000.0,"to_next":5000.0},{"m":4,"name":"April","dim":30,"actual":131000.0,"n":8,"days":{"3":[16375.0,1],"27":[16375.0,1],"18":[16375.0,1],"4":[16375.0,1],"12":[16375.0,1],"19":[16375.0,1],"2":[16375.0,1],"30":[16375.0,1]},"inc_pool":7205.0,"target":null,"blocks":2,"bonanza":7776.0,"carry":11000.0,"to_next":49000.0},{"m":5,"name":"May","dim":31,"actual":27000.0,"n":1,"days":{"17":[27000.0,1]},"inc_pool":1485.0,"target":null,"blocks":0,"bonanza":0.0,"carry":27000.0,"to_next":33000.0},{"m":6,"name":"June","dim":30,"actual":64000.0,"n":4,"days":{"7":[16000.0,1],"2":[16000.0,1],"3":[16000.0,1],"14":[16000.0,1]},"inc_pool":3520.0,"target":null,"blocks":1,"bonanza":3888.0,"carry":4000.0,"to_next":56000.0},{"m":7,"name":"July","dim":31,"actual":152000.0,"n":10,"days":{"14":[15200.0,1],"3":[15200.0,1],"8":[15200.0,1],"18":[15200.0,1],"2":[15200.0,1],"27":[15200.0,1],"19":[15200.0,1],"4":[15200.0,1],"31":[15200.0,1],"21":[15200.0,1]},"inc_pool":8360.0,"target":null,"blocks":2,"bonanza":7776.0,"carry":32000.0,"to_next":28000.0},{"m":8,"name":"August","dim":31,"actual":38000.0,"n":2,"days":{"11":[19000.0,1],"10":[19000.0,1]},"inc_pool":2090.0,"target":null,"blocks":0,"bonanza":0.0,"carry":38000.0,"to_next":22000.0}],"as_of":"2026-08-14","block":60000.0,"pay":3888.0};var PIN='1234';
-var SHORT=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var P={"kind":"agent","name":"Golden Lotus Memorial (BD)","el":8,"months":[{"m":1,"name":"January","dim":31,"actual":42001.0,"n":4,"days":{"4":[2028.0,1],"7":[14555.0,1],"8":[23228.0,1],"19":[2190.0,1]},"inc_pool":4620.0,"target":null,"blocks":0,"bonanza":0.0,"carry":42001.0,"to_next":17999.0,"comm_calc":5131.952,"ut_imm":0.0},{"m":2,"name":"February","dim":28,"actual":8000.0,"n":6,"days":{"10":[3174.0,2],"19":[1443.0,1],"23":[2965.0,1],"16":[228.0,1],"15":[190.0,1]},"inc_pool":880.0,"target":null,"blocks":0,"bonanza":0.0,"carry":8000.0,"to_next":52000.0,"comm_calc":741.6800000000002,"ut_imm":0.0},{"m":3,"name":"March","dim":31,"actual":55000.0,"n":4,"days":{"19":[16487.0,1],"24":[21958.0,1],"4":[5246.0,1],"5":[11309.0,1]},"inc_pool":4806.0,"target":null,"blocks":0,"bonanza":0.0,"carry":55000.0,"to_next":5000.0,"comm_calc":6247.768,"ut_imm":0.0},{"m":4,"name":"April","dim":30,"actual":131000.0,"n":5,"days":{"11":[10168.0,1],"26":[62940.0,1],"16":[30263.0,1],"23":[22653.0,1],"13":[4976.0,1]},"inc_pool":13862.0,"target":null,"blocks":2,"bonanza":7776.0,"carry":11000.0,"to_next":49000.0,"comm_calc":15284.720000000001,"ut_imm":0.0},{"m":5,"name":"May","dim":31,"actual":27000.0,"n":2,"days":{"20":[25398.0,1],"10":[1602.0,1]},"inc_pool":2970.0,"target":null,"blocks":0,"bonanza":0.0,"carry":27000.0,"to_next":33000.0,"comm_calc":3292.3920000000003,"ut_imm":0.0},{"m":6,"name":"June","dim":30,"actual":64000.0,"n":8,"days":{"9":[5157.0,1],"13":[19864.0,1],"5":[20997.0,2],"27":[6416.0,1],"11":[3337.0,1],"20":[766.0,1],"29":[7463.0,1]},"inc_pool":3100.0,"target":null,"blocks":1,"bonanza":3888.0,"carry":4000.0,"to_next":56000.0,"comm_calc":6725.112,"ut_imm":0.0},{"m":7,"name":"July","dim":31,"actual":152000.0,"n":8,"days":{"2":[9462.0,1],"12":[36542.0,2],"5":[12563.0,2],"4":[8932.0,1],"23":[28913.0,1],"10":[55588.0,1]},"inc_pool":9622.0,"target":null,"blocks":2,"bonanza":7776.0,"carry":32000.0,"to_next":28000.0,"comm_calc":18821.12,"ut_imm":0.0},{"m":8,"name":"August","dim":31,"actual":38000.0,"n":4,"days":{"9":[13516.0,1],"13":[6183.0,1],"12":[14815.0,1],"14":[3486.0,1]},"inc_pool":0.0,"target":null,"blocks":0,"bonanza":0.0,"carry":38000.0,"to_next":22000.0,"comm_calc":4242.52,"ut_imm":0.0}],"tier":"BD","as_of":"2026-08-14","block":60000.0,"pay":3888.0};var PIN='1234';
+var ZH=false;try{ZH=localStorage.getItem('pmp.lang')==='zh';}catch(e){}
+function L(en,zh){return ZH?zh:en;}
+var SHORT_EN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var SHORT_ZH=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+var FULL_EN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+function MN(name){if(!ZH)return name;var i=FULL_EN.indexOf(name);return i>=0?(i+1)+'月':name;}
+var SHORT=ZH?SHORT_ZH:SHORT_EN;
 var CALM=matchMedia('(prefers-reduced-motion: reduce)').matches;
 var STORE='pmp.agentdemo.month';
 
@@ -318,7 +328,8 @@ function el(id){return document.getElementById(id);}
 var AO=(P.as_of||'').split('-');
 var AO_M=AO.length===3?parseInt(AO[1],10):0;
 var AO_D=AO.length===3?parseInt(AO[2],10):0;
-var AO_TXT=AO.length===3?(parseInt(AO[2],10)+' '+SHORT[parseInt(AO[1],10)-1]):P.as_of;
+function computeAO(){return AO.length===3?(ZH?(parseInt(AO[1],10)+'月'+parseInt(AO[2],10)+'日'):(parseInt(AO[2],10)+' '+SHORT[parseInt(AO[1],10)-1])):P.as_of;}
+var AO_TXT=computeAO();
 
 var CUR=P.el;
 
@@ -328,32 +339,30 @@ function renderLead(mi){
 
   if(P.kind==='staff'){
     var t=M.target||0,a=M.actual,gap=Math.max(0,t-a),ach=t>0?a/t:null;
-    lead='<p class="per">'+esc(M.name)+' — '+(gap<=0&&t>0?'target achieved':'to hit your target')+'</p>'+
+    lead='<p class="per">'+esc(MN(M.name))+' — '+(gap<=0&&t>0?L('target achieved','目标达成'):L('to hit your target','距离目标'))+'</p>'+
       (t>0?(gap<=0
-        ?'<div class="gap done">Target hit — '+fmt(a-t)+' over</div>'
-        :'<div class="gap">'+fmt(gap)+'</div><p class="say">more to reach your '+fmt(t)+' target — you are at <b>'+pct(ach)+'</b> with <b>'+fmt(a)+'</b> from '+M.n+' sales.</p>')
-        :'<div class="gap">'+fmt(a)+'</div><p class="say">from '+M.n+' sales this month (no individual target set).</p>');
+        ?'<div class="gap done">'+L('Target hit — '+fmt(a-t)+' over','目标达成 — 超出 '+fmt(a-t))+'</div>'
+        :'<div class="gap">'+fmt(gap)+'</div><p class="say">'+L('more to reach your ','还差这个数就达到 ')+fmt(t)+L(' target — you are at ',' 目标 — 目前 ')+'<b>'+pct(ach)+'</b>'+L(' with ','，销售额 ')+'<b>'+fmt(a)+'</b>'+L(' from '+M.n+' sales.','，共 '+M.n+' 单。')+'</p>')
+        :'<div class="gap">'+fmt(a)+'</div><p class="say">'+L('from '+M.n+' sales this month (no individual target set).','本月共 '+M.n+' 单（未设个人目标）。')+'</p>');
     if(t>0){var w=Math.min(ach,1)*100;
       lead+='<div class="bullet"><i style="width:'+w.toFixed(1)+'%" class="'+(ach>=1?'done':'')+'"></i><u></u></div>'+
-        '<div class="bmeta"><span>'+fmt(a)+' so far</span><span>target '+fmt(t)+'</span></div>';}
+        '<div class="bmeta"><span>'+fmt(a)+L(' so far',' 已达成')+'</span><span>'+L('target ','目标 ')+fmt(t)+'</span></div>';}
     var hasInc=M.inc_pool>0;
-    cards='<div class="card"><div class="l">Incentive pool</div><div class="v">'+(hasInc?fmt(M.inc_pool):'&mdash;')+'</div>'+
-      '<div class="h">'+(hasInc?'from your sales this month':'not yet recorded for this month')+'</div></div>'+
-      '<div class="card"><div class="l">Incentive earned</div><div class="v">'+(hasInc&&M.earned!=null?fmt(M.earned):'&mdash;')+'</div>'+
-      '<div class="h">'+(hasInc?(ach!==null?'at '+pct(Math.max(.5,Math.min(ach,1)))+' payout factor (50% floor, 100% cap)':'50% floor applied'):'appears once incentive is entered in the sales file')+'</div></div>';
+    cards='<div class="card"><div class="l">'+L('Incentive pool','奖励池')+'</div><div class="v">'+(hasInc?fmt(M.inc_pool):'&mdash;')+'</div>'+
+      '<div class="h">'+(hasInc?L('from your sales this month','来自您本月的销售'):L('not yet recorded for this month','本月尚未记录'))+'</div></div>'+
+      '<div class="card"><div class="l">'+L('Incentive earned','已获奖励')+'</div><div class="v">'+(hasInc&&M.earned!=null?fmt(M.earned):'&mdash;')+'</div>'+
+      '<div class="h">'+(hasInc?(ach!==null?L('at ','按 ')+pct(Math.max(.5,Math.min(ach,1)))+L(' payout factor (50% floor, 100% cap)',' 发放系数（下限50%，上限100%）'):L('50% floor applied','按50%下限发放')):L('appears once incentive is entered in the sales file','奖励录入销售文件后即显示'))+'</div></div>';
     spoken=M.name+'. '+(t>0?(gap<=0?'Target achieved.':fmt(gap)+' to target.'):fmt(a)+' in sales.');
 
   }else{
     var a2=M.actual,blocks=M.blocks,nxt=M.to_next;
-    lead='<p class="per">'+esc(M.name)+' — Bonanza progress</p>'+
+    lead='<p class="per">'+esc(MN(M.name))+L(' — Bonanza progress',' — 花红进度')+'</p>'+
       (blocks>0
-        ?'<div class="gap done">'+fmt(M.bonanza)+' earned</div><p class="say">'+blocks+' Bonanza block'+(blocks>1?'s':'')+
-          ' banked. <b>'+fmt(nxt)+'</b> more in sales unlocks the next <b>'+fmt(P.pay)+'</b>.</p>'
-        :'<div class="gap">'+fmt(nxt)+'</div><p class="say">more in sales to your first <b>'+fmt(P.pay)+'</b> Bonanza this month — '+
-          'you have <b>'+fmt(a2)+'</b> from '+M.n+' sale'+(M.n===1?'':'s')+'.</p>');
+        ?'<div class="gap done">'+fmt(M.bonanza)+L(' earned',' 已赚取')+'</div><p class="say">'+L(blocks+' Bonanza block'+(blocks>1?'s':'')+' banked. ','已达成 '+blocks+' 个花红档。')+'<b>'+fmt(nxt)+'</b>'+L(' more in sales unlocks the next ',' 更多销售即解锁下一个 ')+'<b>'+fmt(P.pay)+'</b>'+L('.','。')+'</p>'
+        :'<div class="gap">'+fmt(nxt)+'</div><p class="say">'+L('more in sales to your first ','更多销售即获首个 ')+'<b>'+fmt(P.pay)+'</b>'+L(' Bonanza this month — you have ',' 花红 — 您目前有 ')+'<b>'+fmt(a2)+'</b>'+L(' from '+M.n+' sale'+(M.n===1?'':'s')+'.','，共 '+M.n+' 单。')+'</p>');
     var w2=Math.min(1,M.carry/P.block)*100;
     lead+='<div class="bullet"><i style="width:'+w2.toFixed(1)+'%"></i><u></u></div>'+
-      '<div class="bmeta"><span>'+fmt(M.carry)+' toward the next block</span><span>'+fmt(P.block)+'</span></div>';
+      '<div class="bmeta"><span>'+fmt(M.carry)+L(' toward the next block',' · 距下一档进度')+'</span><span>'+fmt(P.block)+'</span></div>';
 
     /* honest month-over-month delta, from the same verified file */
     var prev=mi>1?P.months[mi-2]:null;
@@ -362,13 +371,14 @@ function renderLead(mi){
       var d=(now-was)/was, up=d>=0;
       /* the in-progress month is not comparable to a full month — stay neutral */
       var cls=partial?'':(up?'up':'dn');
-      return '<div class="d '+cls+'">'+(up?'▲':'▼')+' '+pct(Math.abs(d))+' vs '+prev.name+(partial?' (part month)':'')+'</div>';
+      return '<div class="d '+cls+'">'+(up?'▲':'▼')+' '+pct(Math.abs(d))+L(' vs ',' 对比 ')+MN(prev.name)+(partial?L(' (part month)','（部分月）'):'')+'</div>';
     }
-    cards='<div class="card'+(blocks>0?' good':'')+'"><div class="l">Net sales</div><div class="v">'+fmt(a2)+'</div>'+
-      '<div class="h">'+M.n+' sale'+(M.n===1?'':'s')+(partial?' to '+AO_TXT:' this month')+'</div>'+delta(a2,prev&&prev.actual)+'</div>'+
-      '<div class="card"><div class="l">Commission</div><div class="v">'+(M.inc_pool>0?fmt(M.inc_pool):'&mdash;')+'</div>'+
-      '<div class="h">'+(M.inc_pool>0?'indicative — payroll is authoritative':'not yet recorded this month')+'</div>'+
-      (M.inc_pool>0?delta(M.inc_pool,prev&&prev.inc_pool):'')+'</div>';
+    var cm=(M.comm_calc||0)+(M.ut_imm||0),pcm=prev?((prev.comm_calc||0)+(prev.ut_imm||0)):0;
+    cards='<div class="card'+(blocks>0?' good':'')+'"><div class="l">'+L('Net sales','净销售')+'</div><div class="v">'+fmt(a2)+'</div>'+
+      '<div class="h">'+L(M.n+' sale'+(M.n===1?'':'s'),M.n+' 单')+(partial?L(' to ',' 截至 ')+AO_TXT:L(' this month',' · 本月'))+'</div>'+delta(a2,prev&&prev.actual)+'</div>'+
+      '<div class="card"><div class="l">'+L('Commission — calculated','佣金 — 计算值')+'</div><div class="v">'+(cm>0?fmt(cm):'&mdash;')+'</div>'+
+      '<div class="h">'+(P.tier==='UT'?L('UT — immediate-case incentive; Bonanza paid separately','UT — 即需个案奖励；花红另计'):L('Net Licensing × 0.8 × your rate','净执照费 × 0.8 × 您的级别比率'))+((M.ut_imm||0)>0?L(' + immediate ',' + 即需个案 ')+fmt(M.ut_imm):'')+L(' · recorded: ',' · 记录值: ')+(M.inc_pool>0?fmt(M.inc_pool):L('none yet','暂无'))+'</div>'+
+      (cm>0&&pcm>0?delta(cm,pcm):'')+'</div>';
 
     spoken=M.name+'. '+(blocks>0?fmt(M.bonanza)+' earned from '+blocks+' Bonanza blocks.':fmt(nxt)+' more in sales to the first Bonanza.')+
       ' Net sales '+fmt(a2)+' from '+M.n+' sales.';
@@ -389,10 +399,10 @@ function renderLead(mi){
     var best=0,bi=-1;P.months.forEach(function(x,i){if(x.actual>best){best=x.actual;bi=i;}});
     var streak=0;for(var i=mi-1;i>=0;i--){if(P.months[i].actual>0)streak++;else break;}
     var chipsHtml='';
-    if(bi===mi-1&&best>0)chipsHtml+='<span class="ach gold">Personal best month</span>';
-    if(P.kind==='agent'&&M.blocks>0)chipsHtml+='<span class="ach gold">'+M.blocks+' Bonanza block'+(M.blocks>1?'s':'')+' banked</span>';
-    if(P.kind==='staff'&&M.target>0&&M.actual>=M.target)chipsHtml+='<span class="ach gold">Target achieved</span>';
-    if(streak>=2)chipsHtml+='<span class="ach">'+streak+'-month selling streak</span>';
+    if(bi===mi-1&&best>0)chipsHtml+='<span class="ach gold">'+L('Personal best month','个人最佳月份')+'</span>';
+    if(P.kind==='agent'&&M.blocks>0)chipsHtml+='<span class="ach gold">'+L(M.blocks+' Bonanza block'+(M.blocks>1?'s':'')+' banked','已达成 '+M.blocks+' 个花红档')+'</span>';
+    if(P.kind==='staff'&&M.target>0&&M.actual>=M.target)chipsHtml+='<span class="ach gold">'+L('Target achieved','目标达成')+'</span>';
+    if(streak>=2)chipsHtml+='<span class="ach">'+L(streak+'-month selling streak','连续 '+streak+' 个月有销售')+'</span>';
     if(chipsHtml)el('lead').insertAdjacentHTML('beforeend','<div class="achrow">'+chipsHtml+'</div>');
     el('lead').insertAdjacentHTML('afterbegin',ring);
   })();
@@ -434,8 +444,8 @@ function renderYear(mi){
     var h=Math.max(3,(x.actual/scale)*100);
     var hit=(P.kind==='staff'?(x.target>0&&x.actual>=x.target):(x.blocks>0));
     var part=(x.m===AO_M);
-    var tip=x.name+' — '+fmt(x.actual)+' · '+x.n+' sale'+(x.n===1?'':'s')+
-            (x.blocks>0?' · '+x.blocks+' block'+(x.blocks>1?'s':''):'')+(part?' · to '+AO_TXT:'');
+    var tip=MN(x.name)+' — '+fmt(x.actual)+' · '+L(x.n+' sale'+(x.n===1?'':'s'),x.n+' 单')+
+            (x.blocks>0?' · '+L(x.blocks+' block'+(x.blocks>1?'s':''),x.blocks+' 档'):'')+(part?L(' · to ',' · 截至 ')+AO_TXT:'');
     bars+='<div class="hcol" data-m="'+x.m+'" role="button" tabindex="0" aria-label="'+esc(tip)+'" data-tip="'+esc(tip)+'">'+
           '<i style="height:'+h.toFixed(2)+'%" class="'+(hit?'hit':'')+(part?' part':'')+'"></i></div>';
     ax+='<div class="xcol'+(x.m===mi?' cur':'')+'"><b>'+SHORT[x.m-1]+'</b><span>'+(x.actual>0?short(x.actual):'—')+'</span></div>';
@@ -448,7 +458,7 @@ function renderYear(mi){
 /* ---------- daily chart ---------- */
 function renderDaily(mi){
   var M=P.months[mi-1],partial=(M.m===AO_M);
-  el('mlab').textContent=M.name;
+  el('mlab').textContent=MN(M.name);
 
   var dmx=1,dcnt=0,topDay=null,topVal=0;
   for(var k in M.days){
@@ -461,7 +471,7 @@ function renderDaily(mi){
   for(var d=1;d<=M.dim;d++){
     var v=M.days[d]?M.days[d][0]:0;
     var h=v>0?Math.max(6,(v/dmx)*100):0;
-    var tip=v>0?(d+' '+M.name+' — '+fmt(v)+' · '+M.days[d][1]+' sale'+(M.days[d][1]===1?'':'s')):'';
+    var tip=v>0?((ZH?(MN(M.name)+d+'日'):(d+' '+M.name))+' — '+fmt(v)+' · '+L(M.days[d][1]+' sale'+(M.days[d][1]===1?'':'s'),M.days[d][1]+' 单')):'';
     db+='<div class="dcol"'+(v>0?' data-tip="'+esc(tip)+'" aria-label="'+esc(tip)+'"':'')+'>'+
         (v>0?'<i style="height:'+h.toFixed(2)+'%"></i>':'')+'</div>';
   }
@@ -482,11 +492,11 @@ function renderDaily(mi){
   el('daxis').innerHTML=ax;
 
   var cap;
-  if(dcnt===0){cap='No sales recorded in '+M.name+' yet.';}
+  if(dcnt===0){cap=L('No sales recorded in '+M.name+' yet.',MN(M.name)+' 暂无销售记录。');}
   else{
-    cap=dcnt+' selling day'+(dcnt===1?'':'s')+' in '+M.name+
-        ' · largest '+fmt(topVal)+' on '+topDay+' '+M.name;
-    if(partial)cap+=' · shaded days are still ahead — figures run to '+AO_TXT;
+    cap=L(dcnt+' selling day'+(dcnt===1?'':'s')+' in '+M.name,MN(M.name)+' 共 '+dcnt+' 个销售日')+
+        L(' · largest ',' · 最高 ')+fmt(topVal)+L(' on '+topDay+' '+M.name,'（'+topDay+'日）');
+    if(partial)cap+=L(' · shaded days are still ahead — figures run to ',' · 阴影为未到日期 — 数据截至 ')+AO_TXT;
   }
   el('dcap').textContent=cap;
 }
@@ -495,19 +505,19 @@ function renderDaily(mi){
 function renderYTD(){
   var tot=0,n=0,blocks=0,bon=0,comm=0,best=null;
   P.months.forEach(function(x){
-    tot+=x.actual;n+=x.n;blocks+=x.blocks||0;bon+=x.bonanza||0;comm+=x.inc_pool||0;
+    tot+=x.actual;n+=x.n;blocks+=x.blocks||0;bon+=x.bonanza||0;comm+=(P.kind==='agent'?((x.comm_calc||0)+(x.ut_imm||0)):(x.inc_pool||0));
     if(!best||x.actual>best.actual)best=x;
   });
   var months=P.months.length;
   el('ytd').innerHTML=
-    '<div class="stat"><div class="l">Net sales</div><div class="v">'+fmt(tot)+'</div>'+
-      '<div class="h">'+n+' sales across '+months+' months</div></div>'+
-    '<div class="stat"><div class="l">Bonanza earned</div><div class="v">'+(bon>0?fmt(bon):'—')+'</div>'+
-      '<div class="h">'+blocks+' block'+(blocks===1?'':'s')+' banked</div></div>'+
-    '<div class="stat"><div class="l">Commission</div><div class="v">'+(comm>0?fmt(comm):'—')+'</div>'+
-      '<div class="h">indicative total</div></div>'+
-    '<div class="stat"><div class="l">Best month</div><div class="v">'+(best?best.name:'—')+'</div>'+
-      '<div class="h">'+(best?fmt(best.actual)+' from '+best.n+' sales':'')+'</div></div>';
+    '<div class="stat"><div class="l">'+L('Net sales','净销售')+'</div><div class="v">'+fmt(tot)+'</div>'+
+      '<div class="h">'+L(n+' sales across '+months+' months',months+' 个月共 '+n+' 单')+'</div></div>'+
+    '<div class="stat"><div class="l">'+L('Bonanza earned','已赚花红')+'</div><div class="v">'+(bon>0?fmt(bon):'—')+'</div>'+
+      '<div class="h">'+L(blocks+' block'+(blocks===1?'':'s')+' banked','已达成 '+blocks+' 个档')+'</div></div>'+
+    '<div class="stat"><div class="l">'+(P.kind==='agent'?L('Commission — calculated','佣金 — 计算值'):L('Incentive pool','奖励池'))+'</div><div class="v">'+(comm>0?fmt(comm):'—')+'</div>'+
+      '<div class="h">'+(P.kind==='agent'?L('formula-based — payroll is authoritative','按公式计算 — 以工资单为准'):L('indicative total','累计（仅供参考）'))+'</div></div>'+
+    '<div class="stat"><div class="l">'+L('Best month','最佳月份')+'</div><div class="v">'+(best?MN(best.name):'—')+'</div>'+
+      '<div class="h">'+(best?fmt(best.actual)+L(' from '+best.n+' sales','，共 '+best.n+' 单'):'')+'</div></div>';
 }
 
 /* ---------- orchestration ---------- */
@@ -537,15 +547,40 @@ function chipFade(){
   el('chipwrap').classList.toggle('more',box.scrollWidth-box.clientWidth>4);
 }
 
-/* build chips */
-(function(){
+/* ---------- language + chips ---------- */
+function applyLang(){
+  SHORT=ZH?SHORT_ZH:SHORT_EN;
+  AO_TXT=computeAO();
+  var NM=(document.querySelector('.hero h1')||{textContent:''}).textContent;
+  el('ggb').textContent=L('Demo dashboard','演示仪表板');
+  el('gp').textContent=L('DEMO — the code is 1234.','演示 — 访问码是 1234。');
+  el('pingo').textContent=L('Open my dashboard','打开我的仪表板');
+  el('eb1').textContent=L('DEMO · Personal agent dashboard — fictitious data','演示 · 个人代理仪表板 — 虚构数据');
+  el('sl1').textContent=L('Selected month','所选月份');
+  el('dsl').textContent=L('Daily sales — ','每日销售 — ');
+  el('sl2').textContent=L('Your year','您的全年');
+  el('sec2').textContent=L('Sales by month','每月销售');
+  el('ssub').textContent=L('Each dashed line is one RM 60,000 Bonanza block. Tap a month to open it.','每条虚线代表一个 RM 60,000 花红档。点击月份可查看。');
+  el('lg1').innerHTML='<i class="key b"></i>'+L('Sales','销售');
+  el('lg2').innerHTML='<i class="key g"></i>'+L('Block banked','已达成花红档');
+  el('lg3').innerHTML='<i class="key p"></i>'+L('Month in progress','进行中月份');
+  el('lg4').innerHTML='<i class="key l"></i>'+L('RM 60,000 block line','RM 60,000 档线');
+  el('yeb').textContent=L('Year to date','年初至今');
+  el('foot').textContent=L('Personal copy for '+NM+' only. Access code required; please do not forward. Figures come from the verified sales file; incentive and commission figures are indicative — payroll is authoritative.',
+    '此为 '+NM+' 的个人副本，需访问码查看，请勿转发。数据来自核实的销售文件；奖励与佣金金额仅供参考 — 以工资单为准。');
+  el('asof').textContent=L('Figures to ','数据截至 ')+P.as_of+L(' · private — your numbers only',' · 私密 — 仅供本人查看');
+  el('langbtn').textContent=ZH?'EN':'中文';
   var c='';
   P.months.forEach(function(M,i){
     c+='<button type="button" class="chip" data-m="'+(i+1)+'" aria-pressed="false">'+SHORT[i]+'</button>';});
   el('chips').innerHTML=c;
-})();
-
-el('asof').textContent='Figures to '+P.as_of+' · private — your numbers only';
+}
+el('langbtn').addEventListener('click',function(){
+  ZH=!ZH;try{localStorage.setItem('pmp.lang',ZH?'zh':'en');}catch(e){}
+  applyLang();
+  if(el('app').style.visibility==='visible'){renderYTD();render(CUR);chipFade();}
+});
+applyLang();
 
 function near(node,sel){return node&&node.closest?node.closest(sel):null;}
 el('chips').addEventListener('click',function(e){
@@ -592,7 +627,7 @@ function unlock(){
     render(saved>=1&&saved<=P.months.length?saved:P.el);
     chipFade();
   }else{
-    el('pinerr').textContent='That code did not match — please try again.';
+    el('pinerr').textContent=L('That code did not match — please try again.','访问码不符 — 请重试。');
     var b=document.querySelector('#gate .box');
     b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake');
     box.select();
