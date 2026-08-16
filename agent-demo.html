@@ -34,17 +34,22 @@ padding:20px 22px;box-shadow:0 7px 22px rgba(0,0,0,.07)}
 .card .v{font:600 24px/1.2 var(--fd);margin-top:5px;font-variant-numeric:tabular-nums}
 .card .h{font-size:12px;color:var(--muted);margin-top:3px}
 .sec{margin:26px 0 10px;font:600 17px/1.3 var(--fd)}
-.hist{display:flex;gap:5px;align-items:flex-end;height:88px}
+.hist{display:flex;gap:5px;align-items:flex-end;height:132px;padding-bottom:2px;
+border-bottom:2px solid var(--line)}
+.hcol b{font:600 10px/1 var(--fu);color:var(--muted);font-variant-numeric:tabular-nums}
+.hcol.cur b{color:var(--ink)}
 .hcol{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;min-width:0}
 .hcol i{display:block;width:100%;max-width:34px;background:var(--bronze);border-radius:3px 3px 0 0;min-height:2px}
 .hcol i.hit{background:#376c52}
 .hcol span{font-size:10px;color:var(--muted)}
 .hcol.cur span{font-weight:700;color:var(--ink)}
 .dwrap{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:15px 17px;margin-top:10px}
-.dbars{display:flex;gap:2px;align-items:flex-end;height:64px}
+.dbars{display:flex;gap:2px;align-items:flex-end;height:84px;border-bottom:2px solid var(--line);padding-bottom:2px}
+.dcol b{font:600 9px/1 var(--fu);color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
 .dcol{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px}
 .dcol i{display:block;width:100%;max-width:18px;background:var(--bronze);border-radius:2px 2px 0 0}
-.dcol span{font-size:8.5px;color:var(--muted)}
+.dcol span{font-size:8.5px;color:var(--muted);margin-top:3px}
+.dcol{position:relative;min-height:14px}
 .chips{display:flex;gap:5px;overflow-x:auto;margin:18px 0 4px;padding-bottom:4px}
 .chip{flex:0 0 auto;min-width:52px;min-height:40px;border:1px solid var(--line);border-radius:8px;
 background:var(--paper);color:var(--muted);font:600 12px/1.2 var(--fu);padding:8px 6px;cursor:pointer;text-align:center;
@@ -148,30 +153,31 @@ cards='<div class="card"><div class="l">Net sales</div><div class="v">'+fmt(a2)+
 document.getElementById('lead').innerHTML=lead;
 var gv=document.querySelector('.gap');
 if(gv&&!matchMedia('(prefers-reduced-motion: reduce)').matches){
-var txt=gv.textContent,mnum=txt.replace(/[^0-9]/g,'');
-if(mnum.length>2){var target=parseInt(mnum,10),t0=null;
-var pre=txt.slice(0,txt.indexOf(mnum.charAt(0)));var post=txt.slice(txt.indexOf(mnum)+mnum.length);
-var stepFn=function(ts){if(!t0)t0=ts;var k=Math.min(1,(ts-t0)/450);k=1-Math.pow(1-k,3);
-gv.textContent=pre+Math.round(target*k).toLocaleString('en-US')+post;
+var mm=gv.textContent.match(/^([^0-9]*)([0-9][0-9,]*)(.*)$/);
+if(mm){var target=parseInt(mm[2].replace(/,/g,''),10),t0=null;
+if(target>=100){var stepFn=function(ts){if(!t0)t0=ts;var k=Math.min(1,(ts-t0)/450);k=1-Math.pow(1-k,3);
+gv.textContent=mm[1]+Math.round(target*k).toLocaleString('en-US')+mm[3];
 if(k<1)requestAnimationFrame(stepFn);};
-requestAnimationFrame(stepFn);}}
+requestAnimationFrame(stepFn);}}}
 var sel=document.querySelector('.chip[aria-pressed="true"]');
 if(sel&&sel.scrollIntoView)sel.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'});
 document.getElementById('cards').innerHTML=cards;
 var mx=1;P.months.forEach(function(x){mx=Math.max(mx,x.actual);});
+function short(v){return v>=1e6?(v/1e6).toFixed(1)+'m':(v>=1e3?Math.round(v/1e3)+'k':Math.round(v));}
 var h='';P.months.forEach(function(x){
-var hh=Math.max(3,Math.round(x.actual/mx*66));
+var hh=Math.max(4,Math.round(x.actual/mx*92));
 var hit=(P.kind==='staff'?(x.target>0&&x.actual>=x.target):(x.blocks>0));
 h+='<div class="hcol'+(x.m===mi?' cur':'')+'" data-m="'+x.m+'" role="button" tabindex="0" data-tip="'+x.name+' — '+fmt(x.actual)+' · '+x.n+' sales — tap to view">'+
+'<b>'+(x.actual>0?short(x.actual):'')+'</b>'+
 '<i style="height:'+hh+'px" class="'+(hit?'hit':'')+'"></i><span>'+SHORT[x.m-1]+'</span></div>';});
 document.getElementById('hist').innerHTML=h;
-var dmx=1;for(var k in M.days)dmx=Math.max(dmx,M.days[k][0]);
+var dmx=1,dcnt=0;for(var k in M.days){dmx=Math.max(dmx,M.days[k][0]);dcnt++;}
 var db='';for(var d=1;d<=M.dim;d++){
 var v=M.days[d]?M.days[d][0]:0;
-var bh=v>0?Math.max(3,Math.round(v/dmx*46)):0;
+var bh=v>0?Math.max(5,Math.round(v/dmx*52)):0;
 db+='<div class="dcol"'+(v>0?' data-tip="'+d+' '+M.name+' — '+fmt(v)+' · '+M.days[d][1]+' sale'+(M.days[d][1]===1?'':'s')+'"':'')+'>'+
-(v>0?'<i style="height:'+bh+'px"></i>':'<i style="height:1px;opacity:.25"></i>')+
-((d===1||d%5===0)?'<span>'+d+'</span>':'')+'</div>';}
+(v>0?((dcnt<=8?'<b>'+short(v)+'</b>':'')+'<i style="height:'+bh+'px"></i>'):'')+
+((d===1||d%5===0||d===M.dim)?'<span>'+d+'</span>':'')+'</div>';}
 document.getElementById('dbars').innerHTML=db;
 }
 var chips='';P.months.forEach(function(M,i){
