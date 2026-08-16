@@ -375,7 +375,6 @@ function renderLead(mi){
         var step=function(ts){if(!t0)t0=ts;var k=Math.min(1,(ts-t0)/480);k=1-Math.pow(1-k,3);
           gv.textContent=mm[1]+Math.round(target*k).toLocaleString('en-US')+mm[3];
           if(k<1)requestAnimationFrame(step);};
-        gv.textContent=mm[1]+'0'+mm[3];
         requestAnimationFrame(step);
       }
     }
