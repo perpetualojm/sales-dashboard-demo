@@ -176,6 +176,19 @@ body{margin:0;background:var(--ivory);color:var(--ink);
 .stat .v{font:600 22px/1.25 var(--fd);letter-spacing:-.015em;margin-top:4px}
 .stat .h{font:400 12px/1.5 var(--fu);color:var(--tick);margin-top:3px}
 
+.ringwrap{float:right;width:64px;height:64px;position:relative;margin:2px 0 6px 12px}
+.ring{width:64px;height:64px;transform:rotate(-90deg)}
+.ring-track{fill:none;stroke:var(--track);stroke-width:7}
+.ring-fill{fill:none;stroke:var(--bronze);stroke-width:7;stroke-linecap:round;
+  transition:stroke-dashoffset .6s ease}
+.ring-fill.full{stroke:var(--goodmark)}
+.ring-cap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font:700 12.5px/1 var(--fu);color:var(--ink);font-variant-numeric:tabular-nums}
+.achrow{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;clear:both}
+.ach{font:600 11px/1 var(--fu);letter-spacing:.03em;padding:5px 10px;border-radius:999px;
+  background:var(--grid);color:var(--muted)}
+.ach.gold{background:linear-gradient(120deg,#e9d9ae,#d9b98a);color:#4a3312}
+@media (prefers-color-scheme:dark){.ach.gold{background:linear-gradient(120deg,#8a6f3a,#a88a52);color:#f6efdd}}
 .foot{margin-top:32px;padding-top:14px;border-top:1px solid var(--line);
   font:400 12px/1.65 var(--fu);color:var(--muted)}
 
@@ -362,6 +375,27 @@ function renderLead(mi){
   }
 
   el('lead').innerHTML=lead;
+  /* industry patterns: progress ring, personal best, streak */
+  (function(){
+    var pctv,cap;
+    if(P.kind==='staff'){var t=M.target||0;pctv=t>0?Math.min(1,M.actual/t):0;cap=t>0?Math.round(pctv*100)+'%':'—';}
+    else{pctv=Math.min(1,M.carry/P.block);cap=Math.round(pctv*100)+'%';}
+    var R=26,C=2*Math.PI*R,off=C*(1-pctv);
+    var ring='<div class="ringwrap" aria-hidden="true"><svg viewBox="0 0 64 64" class="ring">'+
+      '<circle cx="32" cy="32" r="'+R+'" class="ring-track"/>'+
+      '<circle cx="32" cy="32" r="'+R+'" class="ring-fill'+(pctv>=1?' full':'')+'" '+
+      'stroke-dasharray="'+C.toFixed(1)+'" stroke-dashoffset="'+off.toFixed(1)+'"/>'+
+      '</svg><span class="ring-cap">'+cap+'</span></div>';
+    var best=0,bi=-1;P.months.forEach(function(x,i){if(x.actual>best){best=x.actual;bi=i;}});
+    var streak=0;for(var i=mi-1;i>=0;i--){if(P.months[i].actual>0)streak++;else break;}
+    var chipsHtml='';
+    if(bi===mi-1&&best>0)chipsHtml+='<span class="ach gold">Personal best month</span>';
+    if(P.kind==='agent'&&M.blocks>0)chipsHtml+='<span class="ach gold">'+M.blocks+' Bonanza block'+(M.blocks>1?'s':'')+' banked</span>';
+    if(P.kind==='staff'&&M.target>0&&M.actual>=M.target)chipsHtml+='<span class="ach gold">Target achieved</span>';
+    if(streak>=2)chipsHtml+='<span class="ach">'+streak+'-month selling streak</span>';
+    if(chipsHtml)el('lead').insertAdjacentHTML('beforeend','<div class="achrow">'+chipsHtml+'</div>');
+    el('lead').insertAdjacentHTML('afterbegin',ring);
+  })();
   el('cards').innerHTML=cards;
   el('live').textContent=spoken;
 
