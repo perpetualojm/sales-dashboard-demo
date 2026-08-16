@@ -1,0 +1,927 @@
+<div style="background:#8b3f34;color:#fff;text-align:center;font:600 12px/1.4 'Segoe UI',sans-serif;padding:6px 10px">DEMO — all names and figures on this page are fictitious</div><!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#172b25">
+<title>Sales Dashboard DEMO — fictitious data</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--forest:#263f36;--forest-deep:#172b25;--sage:#789184;
+--bronze:#a87942;--bronze-dark:#835b2f;
+--ivory:#f6f1e8;--paper:#fffdf9;--line:#ddd4c6;--ink:#25322d;--muted:#6b7770;
+--grid:#e9e2d4;--weekend:#f1ebdf;--head:#ede7dd;--rail:#efe8dc;
+--good:#2f7d55;--good-bar:#4e8267;--danger:#a8524a;--danger-bar:#b15b4b;
+--ok-bg:#e3eee8;--ok-fg:#346d52;
+--watch-bg:#f3e7d2;--watch-fg:#845d29;
+--crit-bg:#f5dfdb;--crit-fg:#934438;
+--off-bg:#e8e8e3;--off-fg:#68716c;
+--shadow:0 7px 22px rgba(47,58,52,.055);
+--fd:'Newsreader',Georgia,'Times New Roman',serif;
+--fu:'Public Sans','Segoe UI',system-ui,-apple-system,sans-serif;
+--r:16px}
+
+/* Type scale — eight steps on a ~1.25 ratio. Every font-size in this sheet is
+   one of these. Nothing in between; that in-between is what reads as amateur.
+   12 label · 13 small · 15 body · 19 lead-in · 23 heading · 29 figure
+   44 masthead · 68 statement                                              */
+
+@media (prefers-color-scheme:dark){:root{
+--ivory:#121d19;--paper:#1a2a24;--line:#31463d;--ink:#e9efeb;--muted:#a7b6ad;
+--grid:#2b3d35;--weekend:#16241f;--head:#22342c;--rail:#22342c;
+--bronze:#d0a26c;--bronze-dark:#e0b782;--sage:#8ea79a;
+--good:#7fc79f;--good-bar:#5fa77f;--danger:#e0938a;--danger-bar:#c47163;
+--ok-bg:#1c3a2c;--ok-fg:#8fd0ae;
+--watch-bg:#3a2f16;--watch-fg:#e2be76;
+--crit-bg:#3d211d;--crit-fg:#e8a196;
+--off-bg:#25302b;--off-fg:#9aa8a0;
+--shadow:0 7px 22px rgba(0,0,0,.35)}}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ivory);color:var(--ink);font-family:var(--fu);
+font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;
+text-rendering:optimizeLegibility}
+h1,h2,h3{margin:0;font-family:var(--fd);font-weight:600;letter-spacing:-.015em;text-wrap:balance}
+table,.num,.n,.v,.big{font-variant-numeric:tabular-nums}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px 72px}
+:focus-visible{outline:2px solid var(--bronze);outline-offset:2px;border-radius:6px}
+/* bronze only clears 2.4:1 on the forest band — the masthead needs its own ring */
+.hero :focus-visible{outline:2px solid #f0dcbe;outline-offset:2px}
+
+/* Section eyebrow: numeral, hairline, label — the structure of a printed report */
+.eyebrow{display:flex;align-items:center;margin:0 0 7px;font-size:12px;font-weight:600;
+letter-spacing:.1em;text-transform:uppercase;color:var(--bronze-dark)}
+.eyebrow .n{margin-right:11px;padding-right:11px;border-right:1px solid var(--line);
+font-variant-numeric:tabular-nums}
+
+/* ---------- masthead ---------- */
+.hero{position:relative;overflow:hidden;color:#fff;
+background:linear-gradient(152deg,#2c473d 0%,var(--forest) 42%,var(--forest-deep) 100%)}
+.hero .deco{position:absolute;top:-140px;right:-120px;width:520px;height:520px;
+pointer-events:none;opacity:.5}
+/* bottom padding leaves the lead panel room to straddle the band without covering the chips */
+/* Two columns: the title reads left, the year-to-date standing sits right against a
+   rule. Left-stacking all four blocks left the right 40% of the band empty. */
+.hero-in{position:relative;max-width:1240px;margin:0 auto;padding:34px 24px 50px;
+display:grid;grid-template-columns:minmax(0,1fr) minmax(236px,300px);
+column-gap:56px;grid-template-areas:"brow ytd" "title ytd" "sw sw";align-items:start}
+.hero .eyebrow{grid-area:brow}
+.hero h1{grid-area:title}
+.hero .ytd{grid-area:ytd}
+.hero .switch{grid-area:sw}
+.hero .eyebrow{color:#c6a97e}
+.hero .eyebrow .n{border-right-color:rgba(255,255,255,.28)}
+.hero h1{font-size:clamp(29px,3.4vw,44px);line-height:1.14;letter-spacing:-.02em;
+color:#fff;max-width:30ch}
+.hero h1 em{font-style:normal;color:#e2c396}
+
+/* ---------- year to date ---------- */
+.ytd{margin:5px 0 0;padding:1px 0 1px 24px;border-left:1px solid rgba(255,255,255,.18);
+max-width:none;font-size:15px;line-height:1.55;color:rgba(255,255,255,.74)}
+.ytd b{color:#fff;font-weight:600}
+.ytd .lab{display:block;margin-bottom:3px;font-size:12px;font-weight:600;
+letter-spacing:.1em;text-transform:uppercase;color:#c6a97e}
+
+/* ---------- month switcher ---------- */
+.switch{margin-top:22px;border-top:1px solid rgba(255,255,255,.14);padding-top:15px}
+.switch-lab{margin:0 0 10px;font-size:12px;font-weight:600;letter-spacing:.08em;
+text-transform:uppercase;color:rgba(255,255,255,.66)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:12px;scrollbar-width:thin}
+.chip{flex:1 0 70px;min-height:54px;padding:8px 7px 9px;cursor:pointer;text-align:center;
+border:1px solid rgba(255,255,255,.2);border-bottom:3px solid transparent;
+border-radius:3px 3px 0 0;background:rgba(255,255,255,.07);
+color:rgba(255,255,255,.86);font-family:var(--fu);font-size:12px;font-weight:600;
+letter-spacing:.06em;text-transform:uppercase;
+transition:background .15s,border-color .15s,color .15s}
+.chip .pc{display:block;margin-top:3px;font-family:var(--fd);font-size:15px;font-weight:500;
+letter-spacing:0;text-transform:none}
+.chip:hover:not([disabled]){background:rgba(255,255,255,.19);
+border-color:rgba(255,255,255,.42);color:#fff}
+.chip[aria-pressed="true"]{background:var(--paper);border-color:var(--paper);
+border-bottom-color:var(--bronze);color:var(--forest-deep)}
+.chip[aria-pressed="true"]:hover{background:#fff;border-color:#fff;
+border-bottom-color:var(--bronze-dark);color:var(--forest-deep)}
+.chip[aria-pressed="true"] .pc{color:var(--bronze-dark)}
+.chip.hit .pc{color:#b7dcc4}
+.chip[aria-pressed="true"].hit .pc{color:var(--good)}
+.chip[disabled]{opacity:.34;cursor:not-allowed;border-style:dashed}
+
+/* ---------- lead statement ----------
+   Replaces the five-tile KPI strip. A board document opens with one figure and
+   one sentence; the supporting numbers sit beside it as a ruled key-figures
+   table, the way a financial summary page is set. */
+.lead{position:relative;z-index:2;margin:-30px 0 0;display:grid;
+grid-template-columns:minmax(0,1.3fr) minmax(276px,.85fr);gap:22px 48px;
+background:var(--paper);border:1px solid var(--line);border-radius:var(--r);
+padding:32px 36px 34px;box-shadow:var(--shadow)}
+/* the brand's status accent bar, carried by the statement rather than by tiles */
+/* Status arrives as a rule ABOVE the statement, never as a bar down a card's left
+   edge — that side-tab is the worn dashboard tell. A rule-above is how a report sets
+   a section, and it lands this column on the same line as the key figures opposite. */
+.lead-fig{border-top:2px solid var(--sage);padding-top:19px}
+.lead-fig.is-good{border-top-color:var(--good-bar)}
+.lead-fig.is-bad{border-top-color:var(--danger-bar)}
+.lead-fig .per{margin:0 0 6px;font-size:12px;font-weight:600;letter-spacing:.1em;
+text-transform:uppercase;color:var(--muted)}
+.lead-fig .v{font-family:var(--fd);font-size:clamp(44px,5.2vw,68px);font-weight:500;
+line-height:1;letter-spacing:-.025em;color:var(--forest-deep)}
+.lead-fig .say{margin:18px 0 0;max-width:52ch;font-size:19px;line-height:1.5;color:var(--ink)}
+.lead-fig .say b{font-weight:600}
+.mark{display:inline-block;margin:0 0 14px;padding:4px 13px;border-radius:3px;
+font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.mark.good{background:var(--ok-bg);color:var(--ok-fg)}
+.mark.mid{background:var(--watch-bg);color:var(--watch-fg)}
+.mark.bad{background:var(--crit-bg);color:var(--crit-fg)}
+
+.keyfig{align-self:start;border-top:1px solid var(--line)}
+.keyfig .r{display:flex;justify-content:space-between;align-items:baseline;gap:22px;
+padding:12px 0;border-bottom:1px solid var(--line)}
+.keyfig .k{font-size:13px;line-height:1.35;color:var(--ink)}
+.keyfig .k .s{display:block;margin-top:2px;font-size:12px;color:var(--muted)}
+.keyfig .k .s.up{color:var(--good);font-weight:600}
+.keyfig .k .s.down{color:var(--danger);font-weight:600}
+.keyfig .n{flex:0 0 auto;font-family:var(--fd);font-size:23px;font-weight:500;
+line-height:1.1;letter-spacing:-.015em;color:var(--forest-deep);white-space:nowrap}
+@media (prefers-color-scheme:dark){.lead-fig .v,.keyfig .n{color:var(--ink)}}
+
+/* ---------- panels ---------- */
+/* start, not stretch — a short panel should end at its content, not trail dead space */
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:18px;margin-top:26px;align-items:start}
+
+/* ---------- movements ----------
+   Seven panels of equal weight gave the board no reading order. Two ruled breaks
+   split the page into "are we hitting target" (01-03) and "what made up the month"
+   (04-07) — the structure a report uses, carried by one rule and one numeral. */
+.movement{grid-column:1/-1;display:flex;align-items:baseline;gap:14px;
+margin:18px 0 -6px;padding-top:22px;border-top:1px solid var(--line)}
+.movement:first-child{margin-top:0;padding-top:2px;border-top:none}
+.movement .rn{font-family:var(--fd);font-size:19px;font-weight:500;line-height:1;
+color:var(--bronze-dark)}
+.movement .rt{font-family:var(--fu);font-size:12px;font-weight:600;letter-spacing:.12em;
+text-transform:uppercase;color:var(--muted)}
+@media (prefers-color-scheme:dark){.movement .rn{color:var(--bronze)}}
+.card{grid-column:span 6;background:var(--paper);border:1px solid var(--line);
+border-radius:var(--r);padding:24px 26px;box-shadow:var(--shadow)}
+.card.w{grid-column:1/-1}
+.card.c7{grid-column:span 7}
+.card.c5{grid-column:span 5}
+.card h2{font-size:23px;line-height:1.25;color:var(--forest-deep)}
+.card .sub{margin:5px 0 18px;font-size:13px;line-height:1.5;color:var(--muted)}
+.card .note{margin:18px 0 0;padding-top:14px;border-top:1px solid var(--line);
+font-size:13px;line-height:1.5;color:var(--muted)}
+.card .note b{color:var(--ink);font-weight:600}
+.card .note.tight{margin:20px 0 10px;padding-top:14px}
+@media (prefers-color-scheme:dark){.card h2{color:var(--ink)}}
+
+.empty{margin:0;padding:14px 0;font-size:13px;color:var(--muted)}
+.failure{border-top:3px solid var(--danger-bar)}
+.failure .eyebrow{color:var(--danger)}
+.failure .note{font-family:Consolas,ui-monospace,monospace;font-size:13px}
+.pill{display:inline-block;padding:4px 12px;border-radius:3px;
+font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.healthy{background:var(--ok-bg);color:var(--ok-fg)}
+.watch{background:var(--watch-bg);color:var(--watch-fg)}
+.critical{background:var(--crit-bg);color:var(--crit-fg)}
+
+/* ---------- measured rows ---------- */
+.br{display:grid;grid-template-columns:minmax(112px,1.1fr) minmax(80px,1.9fr) 156px;
+gap:18px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}
+.br:last-of-type{border-bottom:none}
+.br .nm{font-size:15px;font-weight:600;line-height:1.3}
+.br .nm .s{display:block;margin-top:3px;font-size:12px;font-weight:400;color:var(--muted)}
+/* figures land on one axis across every row of a panel, like a statement column */
+.br .val{text-align:right;font-size:12px;line-height:1.4;color:var(--muted);white-space:nowrap}
+.br .val b{display:block;margin-bottom:1px;font-family:var(--fd);font-size:19px;
+font-weight:500;letter-spacing:-.015em;color:var(--ink)}
+.bullet{position:relative;height:10px;border-radius:2px;background:var(--rail)}
+.bullet.na{background:none;border-top:1px dashed var(--line);height:1px;
+border-radius:0;align-self:center}
+.bullet .fill{position:absolute;left:0;top:0;bottom:0;border-radius:2px;
+background:linear-gradient(90deg,#c8a372,var(--bronze-dark))}
+.bullet .fill.ok{background:linear-gradient(90deg,#7fb198,var(--good-bar))}
+.bullet .fill.bad{background:linear-gradient(90deg,#d29488,var(--danger-bar))}
+.bullet .tick{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--forest-deep)}
+@media (prefers-color-scheme:dark){.bullet .tick{background:var(--ink)}}
+
+/* ---------- share rows ---------- */
+.mix{margin-bottom:13px}
+.mix:last-of-type{margin-bottom:0}
+.mix .t{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+margin-bottom:6px;font-size:13px}
+.mix .t .k{font-weight:600}
+.mix .t .k.dim{font-weight:400;color:var(--muted)}
+.mix .t .s{color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums}
+.sbar{height:7px;border-radius:2px;background:var(--rail);overflow:hidden}
+.sbar i{display:block;height:100%;background:linear-gradient(90deg,#c8a372,var(--bronze-dark))}
+.mix.now .sbar i{background:linear-gradient(90deg,#8fbca3,var(--good-bar))}
+
+/* ---------- twin stat ---------- */
+.twin{display:flex;flex-wrap:wrap;gap:36px;margin-bottom:20px;
+padding-bottom:18px;border-bottom:1px solid var(--line)}
+.twin .big{font-family:var(--fd);font-size:29px;font-weight:500;line-height:1.1;
+letter-spacing:-.02em;color:var(--forest-deep)}
+.twin .cap{margin-top:3px;font-size:12px;color:var(--muted)}
+@media (prefers-color-scheme:dark){.twin .big{color:var(--ink)}}
+
+/* ---------- table ---------- */
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th{padding:0 14px 9px;color:var(--muted);
+font-size:12px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
+text-align:left;white-space:nowrap;border-bottom:1px solid var(--ink)}
+td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+td.dim{color:var(--muted)}
+td.amt{font-family:var(--fd);font-size:19px;font-weight:500;letter-spacing:-.015em}
+tbody tr:last-child td{border-bottom:none}
+tbody tr{transition:background .12s}
+tbody tr:hover{background:var(--head)}
+tbody tr:hover td.dim{color:var(--ink)}
+tbody tr:hover td:first-child{background:var(--head)}
+td.r,th.r{text-align:right}
+/* The source's agent column also carries walk-ins and web leads. They stay in the
+   table — dropping revenue would be worse — but below a labelled rule, so the partner
+   count and total stated above it are actually a partner count and total. */
+tbody tr.sep td{padding:20px 14px 8px;border-bottom:2px solid var(--line);
+font-family:var(--fu);font-size:12px;font-weight:600;letter-spacing:.08em;
+text-transform:uppercase;color:var(--muted)}
+tbody tr.sep:hover td,tbody tr.sep:hover td:first-child{background:none}
+tbody tr.direct td,tbody tr.direct td.amt{color:var(--muted)}
+.tag{display:inline-block;padding:2px 9px;border:1px solid var(--line);border-radius:3px;
+color:var(--muted);font-size:12px;font-weight:600;letter-spacing:.07em}
+
+/* ---------- chart ---------- */
+/* Drawn at the container's real pixel width, so 1 viewBox unit = 1px and tick
+   labels stay at their true size instead of shrinking with the viewport. */
+.chartwrap{width:100%}
+.chart{display:block;width:100%;height:auto}
+.gl{stroke:var(--grid);stroke-width:1}
+.axis{stroke:var(--ink);stroke-width:1.25}
+.ytick,.xtick{fill:var(--muted);font-family:var(--fu)}
+.ytick{text-anchor:end}
+.xtick{text-anchor:middle}
+/* sage carries "on target" everywhere else on the page — using it for "weekend" made
+   the baseline markers read as a status. Weekends are context, so they sit in neutral. */
+.wknd{fill:var(--muted);opacity:.5}
+/* The brand bar gradient tops out at #c8a372, only 2.3:1 on paper — under the 3:1
+   floor for a data mark. A bronze-dark hairline defines the shape without altering
+   the brand fill. Hover darkens rather than fading, so contrast rises. */
+.dbar{fill:url(#pmpBar);stroke:var(--bronze-dark);stroke-width:1;transition:fill .12s}
+.dbar:hover{fill:var(--bronze-dark)}
+.guide{stroke:var(--forest-deep);stroke-width:1.4;stroke-dasharray:5 4;opacity:.5}
+@media (prefers-color-scheme:dark){.guide{stroke:var(--ink);opacity:.55}}
+.legend{display:flex;flex-wrap:wrap;gap:10px 24px;margin-top:16px;padding-top:13px;
+border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend i{width:14px;height:11px;flex:0 0 auto}
+.legend i.bar{background:linear-gradient(180deg,#c8a372,var(--bronze-dark));
+border:1px solid var(--bronze-dark)}
+.legend i.wk{background:var(--muted);opacity:.5;height:3px}
+.legend i.gd{height:0;width:18px;border-top:2px dashed var(--forest-deep);opacity:.6}
+@media (prefers-color-scheme:dark){.legend i.gd{border-top-color:var(--ink)}}
+
+/* ---------- disclosure ---------- */
+details{margin-top:18px;background:var(--paper);border:1px solid var(--line);
+border-radius:var(--r);box-shadow:var(--shadow)}
+summary{display:flex;align-items:center;gap:12px;min-height:56px;padding:16px 26px;
+cursor:pointer;list-style:none;font-family:var(--fd);font-size:19px;font-weight:600;
+color:var(--forest-deep)}
+summary::-webkit-details-marker{display:none}
+summary:hover{background:var(--head);border-radius:var(--r)}
+details[open] summary{border-radius:var(--r) var(--r) 0 0;border-bottom:1px solid var(--line)}
+summary:focus-visible{outline:2px solid var(--bronze);outline-offset:-3px}
+summary .tri{font-size:12px;color:var(--bronze);transition:transform .2s}
+details[open] summary .tri{transform:rotate(90deg)}
+@media (prefers-color-scheme:dark){summary{color:var(--ink)}}
+.dbody{padding:6px 26px 20px}
+.pi{display:flex;gap:18px;padding:16px 0;border-bottom:1px solid var(--line)}
+.pi:last-child{border-bottom:none}
+/* outlined numerals — six solid bronze discs spent the accent six times in one panel */
+.pi .n{flex:0 0 auto;width:30px;height:30px;border-radius:50%;
+display:flex;align-items:center;justify-content:center;
+background:none;border:1px solid var(--line);color:var(--bronze-dark);
+font-family:var(--fd);font-size:15px;font-weight:600}
+.pi h3{margin:0 0 5px;font-size:19px;font-weight:600}
+.pi p{margin:0;font-size:15px;line-height:1.55;color:var(--muted)}
+.pi p b{color:var(--ink);font-weight:600}
+code{padding:2px 6px;border-radius:3px;background:var(--head);color:var(--ink);
+font-family:Consolas,ui-monospace,monospace;font-size:13px}
+
+.foot{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);
+font-size:12px;line-height:1.6;color:var(--muted)}
+
+/* ---------- responsive ---------- */
+@media (max-width:1080px){
+.card,.card.c7,.card.c5{grid-column:1/-1}
+.hero .deco{opacity:.3}}
+
+@media (max-width:900px){
+/* the masthead's right column has no room to be a column — restack it */
+.hero-in{grid-template-columns:1fr;column-gap:0;
+grid-template-areas:"brow" "title" "ytd" "sw"}
+.ytd{margin:18px 0 0;padding:16px 0 0;max-width:70ch;
+border-left:none;border-top:1px solid rgba(255,255,255,.14)}
+.lead{grid-template-columns:1fr;gap:26px;padding:28px}
+.keyfig{border-top:none}
+.keyfig .r:first-child{border-top:1px solid var(--line)}}
+
+@media (max-width:820px){
+.wrap{padding:0 20px 56px}
+.hero-in{padding:28px 20px 46px}
+.card{padding:22px}
+.grid{gap:16px}}
+
+@media (max-width:600px){
+.wrap{padding:0 16px 46px}
+/* keep bottom padding — the lead panel overlaps this space, not the chips */
+.hero-in{padding:24px 16px 42px}
+.hero h1{max-width:none}
+.lead{padding:24px 20px;margin-top:-22px}
+.lead-fig{padding-top:16px}
+.card{padding:20px 18px}
+.chip{flex:0 0 66px}
+.br{grid-template-columns:1fr auto;gap:4px 14px;padding:16px 0}
+.br .bullet{grid-column:1/-1;order:3;margin-top:9px}
+.br .val{order:2;align-self:start}
+.twin{gap:24px}
+summary{padding:14px 18px}
+.dbody{padding:6px 18px 16px}
+/* first column stays pinned while the rest of the table scrolls under it */
+.tw{border:1px solid var(--line);border-radius:3px}
+.tw table{min-width:520px}
+.tw th{padding:10px 14px}
+.tw th:first-child,.tw td:first-child{position:sticky;left:0;z-index:1;
+background:var(--paper);border-right:1px solid var(--line)}
+.tw th:first-child{background:var(--head)}}
+
+@media (max-width:380px){
+.wrap{padding:0 13px 40px}
+.hero-in{padding:20px 13px 38px}
+.lead,.card{padding:18px 15px}
+.twin{gap:18px}}
+
+/* Motion here only ever confirms a state change that already happened, so removing
+   it costs nothing. Colour and position feedback remain in every case. */
+@media (prefers-reduced-motion:reduce){
+*,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;
+transition-duration:.01ms !important;scroll-behavior:auto !important}
+details[open] summary .tri{transform:none;font-size:0}
+details[open] summary .tri::after{content:'\25BC';font-size:12px}}
+
+@media print{
+/* nothing on paper below 12pt */
+body{background:#fff}
+body,table,.card .sub,.card .note,.mix .t,.br .val,.br .nm .s,.keyfig .k,.keyfig .k .s,
+.pi p,.foot,.legend,.empty,.eyebrow,th,.tag,.pill,.mark,.twin .cap,code,
+.movement .rt{font-size:12pt;line-height:1.45}
+.movement .rn{font-size:15pt}
+.movement{margin:14px 0 0;padding-top:12px;break-after:avoid}
+.hero h1{font-size:26pt}
+.ytd{font-size:13pt}
+.lead-fig .say{font-size:14pt}
+.lead-fig .v{font-size:38pt}
+.card h2,.keyfig .n{font-size:17pt}
+.pi h3{font-size:14pt}
+.br .nm{font-size:13pt}
+.br .val b,td.amt,.twin .big{font-size:14pt}
+.hero{background:#fff;color:var(--ink)}
+.hero h1,.hero h1 em{color:var(--forest-deep)}
+.hero .eyebrow{color:var(--bronze-dark)}
+.hero .eyebrow .n{border-right-color:var(--line)}
+.ytd{color:var(--ink);border-top-color:var(--line);border-left-color:var(--line)}
+.ytd b{color:var(--ink)}
+.ytd .lab{color:var(--bronze-dark)}
+.switch,.deco{display:none}
+.lead{margin-top:20px;break-inside:avoid}
+.card,.lead,details{box-shadow:none;break-inside:avoid}
+.card.c7,.card.c5,.card{grid-column:1/-1}
+/* drawn 1:1 for print, so 16-unit axis text lands at exactly 12pt */
+.chart{width:auto;max-width:100%}
+details{display:none}}
+
+/* mobile hardening — appended */
+.hero-in > *{min-width:0}
+.grid > *{min-width:0}
+@media (max-width:640px){
+  h1{font-size:24px}
+  #ytd{font-size:13px}
+  .hero,.hero-in{overflow-x:hidden}
+  img,svg{max-width:100%}
+}
+
+.dstrip{grid-column:1/-1;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.dshead{display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px 14px;margin-bottom:7px}
+.dshead .lab{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--bronze-dk)}
+.dslatest{font-size:12.5px;color:var(--muted)}
+.dslatest b{color:var(--ink);font-variant-numeric:tabular-nums}
+.dsbars{display:flex;gap:3px;align-items:flex-end;height:52px}
+.dscol{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px}
+.dscol i{display:block;width:100%;max-width:26px;background:var(--bronze);border-radius:2px 2px 0 0}
+.dscol span{font-size:9px;color:var(--tick)}
+@media (max-width:640px){.dscol span{font-size:8px}.dslatest{font-size:11.5px}}
+
+.pbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:16px 0 2px;justify-content:flex-end}
+.pbtn{font:600 12px/1 'Segoe UI',sans-serif;padding:8px 14px;border-radius:7px;
+border:1px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;min-height:36px}
+.pbtn:hover{border-color:var(--bronze);color:var(--bronze-dk)}
+.pbtn:active{transform:scale(.97)}
+.pbtn:focus-visible{outline:2px solid var(--bronze);outline-offset:2px}
+.pstale{font-size:11.5px;color:var(--muted);margin-left:auto}
+.pstale.warn{color:#8b3f34;font-weight:700}
+@media print{.pbar{display:none !important}}
+
+#livetip{display:none;position:fixed;z-index:99;background:var(--forest-deep);color:#fff;
+font:600 12px/1.45 'Segoe UI',sans-serif;padding:7px 11px;border-radius:7px;pointer-events:none;
+box-shadow:0 6px 18px rgba(0,0,0,.25);max-width:240px;white-space:nowrap}
+.dbar{cursor:pointer}
+.dbar:hover{filter:brightness(1.18)}
+.dscol{cursor:pointer}
+@media print{#livetip{display:none !important}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<linearGradient id="pmpBar" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0%" stop-color="#c8a372"/><stop offset="100%" stop-color="#835b2f"/></linearGradient>
+</defs></svg>
+
+<header class="hero" data-od-id="dashboard-masthead">
+<svg class="deco" viewBox="0 0 520 520" aria-hidden="true" focusable="false">
+<g fill="none" stroke="#ffffff" stroke-opacity=".08">
+<circle cx="300" cy="220" r="90"/><circle cx="300" cy="220" r="140"/>
+<circle cx="300" cy="220" r="192"/><circle cx="300" cy="220" r="245"/></g>
+<circle cx="300" cy="220" r="46" fill="#ffffff" fill-opacity=".05"/>
+</svg>
+<div class="hero-in">
+<p class="eyebrow">Perpetual Memorial Park &#183; Kulai</p>
+<h1 data-od-id="dashboard-title">Sales dashboard &#183; <em id="mtitle">August</em> 2026</h1>
+<p class="ytd" id="ytd" data-od-id="year-to-date"></p>
+<div class="switch" data-od-id="month-switcher">
+<p class="switch-lab" id="switchlab">Select a month</p>
+<div class="chips" role="group" aria-label="Select a month" id="chips"></div>
+</div>
+</div>
+</header>
+
+<main class="wrap" id="main">
+<section class="lead" id="lead" data-od-id="month-statement" aria-label="Month summary"></section>
+<div class="grid" id="grid" data-od-id="panel-grid"></div>
+
+
+
+<p class="foot" id="foot" data-od-id="source-note"></p>
+</main>
+
+<script>
+var D={"as_of":"2026-08-14","el":8,"months":[{"m":1,"name":"January","dim":31,"rev":738003.0,"n":31,"target":900000,"days":{"3":[78791.0,2],"5":[82485.0,3],"8":[34673.0,1],"7":[33264.0,2],"21":[24312.0,2],"25":[55684.0,2],"26":[17370.0,1],"10":[72480.0,3],"22":[12929.0,1],"6":[46411.0,2],"20":[31704.0,1],"9":[49134.0,2],"23":[38422.0,1],"13":[12198.0,1],"1":[20110.0,1],"4":[18671.0,1],"15":[40490.0,1],"30":[35514.0,2],"27":[16331.0,1],"28":[17030.0,1]},"best_day":{"d":5,"rev":82485.0,"n":3},"weekday":[{"k":"Mon","rev":99855.0,"n":4},{"k":"Tue","rev":106644.0,"n":5},{"k":"Wed","rev":74606.0,"n":5},{"k":"Thu","rev":108202.0,"n":4},{"k":"Fri","rev":123070.0,"n":5},{"k":"Sat","rev":151271.0,"n":5},{"k":"Sun","rev":74355.0,"n":3}],"booking":{"cases":17,"amount":23500.0},"agents":[{"k":"Harmony Funeral Care (UT)","t":"UT","rev":109740.0,"n":4},{"k":"Golden Lotus Memorial (BD)","t":"BD","rev":91487.0,"n":3},{"k":"Ban Seng Trading (BD)","t":"BD","rev":51202.0,"n":2},{"k":"Lim Brothers Casket (UT)","t":"UT","rev":43566.0,"n":2},{"k":"Sunrise Memorial Agency (BD)","t":"BD","rev":39205.0,"n":2},{"k":"Phoenix Services (BM)","t":"BM","rev":12885.0,"n":1},{"k":"Tan & Sons (UT)","t":"UT","rev":11666.0,"n":1}],"agent_count":7,"agent_rev":359751.0,"products":[{"p":"Urn","t":"DOUBLE","rev":322577.0,"n":13},{"p":"Land","t":"SDP","rev":258778.0,"n":11},{"p":"Urn","t":"SINGLE","rev":156648.0,"n":7}],"zones":[{"k":"C3","rev":120605.0,"n":5},{"k":"10D","rev":108928.0,"n":3},{"k":"QL(A)","rev":98349.0,"n":4},{"k":"A1","rev":93277.0,"n":4},{"k":"HD(K)","rev":87299.0,"n":4},{"k":"B2","rev":79695.0,"n":3},{"k":"9C","rev":77068.0,"n":4},{"k":"7A","rev":60584.0,"n":3}],"staff":[{"k":"Adrian Teo","rev":328864.0,"n":14,"mix":[["Direct Team",186354.0],["BD",83578.0],["UT",46047.0],["BM",12885.0]]},{"k":"Mei Lin Chua","rev":201887.0,"n":8,"mix":[["Direct Team",131424.0],["UT",36937.0],["BD",33526.0]]},{"k":"Ravi Kumar","rev":120569.0,"n":6,"mix":[["Direct Team",60474.0],["UT",43566.0],["BD",16529.0]]},{"k":"Grace Ho","rev":69653.0,"n":2,"mix":[["UT",38422.0],["BD",31231.0]]},{"k":"Jason Yap","rev":17030.0,"n":1,"mix":[["BD",17030.0]]}],"tiers":[{"k":"Direct Team","rev":378252.0,"n":16},{"k":"BD","rev":181894.0,"n":7},{"k":"UT","rev":164972.0,"n":7},{"k":"BM","rev":12885.0,"n":1}],"routes":[{"k":"Walk In","rev":667469.0,"n":28},{"k":"Digital - Social","rev":70534.0,"n":3}],"chan_actual":{"UT":164972.0,"BA/BM/BD":194779.0,"Walk in/Digital Lead":378252.0,"RF":0.0}},{"m":2,"name":"February","dim":28,"rev":310001.0,"n":14,"target":1000000,"days":{"22":[53448.0,2],"15":[20253.0,1],"11":[71333.0,1],"5":[50150.0,1],"13":[11173.0,1],"20":[15252.0,1],"12":[7987.0,1],"26":[12908.0,1],"18":[37585.0,2],"10":[24428.0,2],"6":[5484.0,1]},"best_day":{"d":11,"rev":71333.0,"n":1},"weekday":[{"k":"Mon","rev":0.0,"n":0},{"k":"Tue","rev":24428.0,"n":2},{"k":"Wed","rev":108918.0,"n":3},{"k":"Thu","rev":71045.0,"n":3},{"k":"Fri","rev":31909.0,"n":3},{"k":"Sat","rev":0.0,"n":0},{"k":"Sun","rev":73701.0,"n":3}],"booking":{"cases":8,"amount":8000.0},"agents":[{"k":"Tan & Sons (UT)","t":"UT","rev":71333.0,"n":1},{"k":"Unity Casket House (BD)","t":"BD","rev":50150.0,"n":1},{"k":"Golden Lotus Memorial (BD)","t":"BD","rev":45846.0,"n":2},{"k":"Ban Seng Trading (BD)","t":"BD","rev":20253.0,"n":1},{"k":"Lim Brothers Casket (UT)","t":"UT","rev":12908.0,"n":1},{"k":"Harmony Funeral Care (UT)","t":"UT","rev":11962.0,"n":1},{"k":"Well Wishes Agency (RF)","t":"RF","rev":7987.0,"n":1}],"agent_count":7,"agent_rev":220439.0,"products":[{"p":"Urn","t":"DOUBLE","rev":177002.0,"n":9},{"p":"Land","t":"SDP","rev":98841.0,"n":3},{"p":"Urn","t":"SINGLE","rev":34158.0,"n":2}],"zones":[{"k":"7A","rev":71333.0,"n":1},{"k":"C3","rev":50150.0,"n":1},{"k":"QL(A)","rev":47971.0,"n":3},{"k":"A1","rev":39670.0,"n":3},{"k":"HD(K)","rev":38696.0,"n":3},{"k":"B2","rev":34673.0,"n":1},{"k":"10D","rev":16335.0,"n":1},{"k":"9C","rev":11173.0,"n":1}],"staff":[{"k":"Adrian Teo","rev":205693.0,"n":7,"mix":[["BD",84823.0],["UT",71333.0],["Direct Team",49537.0]]},{"k":"Mei Lin Chua","rev":71147.0,"n":5,"mix":[["Direct Team",40025.0],["UT",11962.0],["BD",11173.0],["RF",7987.0]]},{"k":"Grace Ho","rev":33161.0,"n":2,"mix":[["BD",20253.0],["UT",12908.0]]}],"tiers":[{"k":"BD","rev":116249.0,"n":4},{"k":"UT","rev":96203.0,"n":3},{"k":"Direct Team","rev":89562.0,"n":6},{"k":"RF","rev":7987.0,"n":1}],"routes":[{"k":"Walk In","rev":231611.0,"n":11},{"k":"Digital - Social","rev":78390.0,"n":3}],"chan_actual":{"UT":96203.0,"BA/BM/BD":116249.0,"Walk in/Digital Lead":89562.0,"RF":7987.0}},{"m":3,"name":"March","dim":31,"rev":1056002.0,"n":51,"target":1600000,"days":{"3":[57030.0,2],"14":[49351.0,2],"13":[7291.0,1],"9":[16684.0,1],"25":[48961.0,3],"19":[118956.0,4],"31":[110290.0,4],"4":[63964.0,3],"26":[11786.0,1],"12":[68090.0,3],"8":[8866.0,1],"15":[46762.0,3],"20":[89144.0,5],"11":[51769.0,2],"7":[43890.0,2],"10":[109432.0,4],"22":[5565.0,1],"6":[32182.0,2],"16":[21198.0,1],"23":[30852.0,2],"17":[16160.0,1],"2":[11013.0,1],"18":[19347.0,1],"29":[17419.0,1]},"best_day":{"d":19,"rev":118956.0,"n":4},"weekday":[{"k":"Mon","rev":79747.0,"n":5},{"k":"Tue","rev":292912.0,"n":11},{"k":"Wed","rev":184041.0,"n":9},{"k":"Thu","rev":198832.0,"n":8},{"k":"Fri","rev":128617.0,"n":8},{"k":"Sat","rev":93241.0,"n":4},{"k":"Sun","rev":78612.0,"n":6}],"booking":{"cases":34,"amount":45500.0},"agents":[{"k":"Unity Casket House (BD)","t":"BD","rev":111450.0,"n":7},{"k":"Lim Brothers Casket (UT)","t":"UT","rev":95490.0,"n":7},{"k":"Harmony Funeral Care (UT)","t":"UT","rev":87972.0,"n":3},{"k":"Phoenix Services (BM)","t":"BM","rev":68741.0,"n":3},{"k":"Sunrise Memorial Agency (BD)","t":"BD","rev":59755.0,"n":4},{"k":"Tan & Sons (UT)","t":"UT","rev":51880.0,"n":3},{"k":"Golden Lotus Memorial (BD)","t":"BD","rev":49994.0,"n":2},{"k":"Ban Seng Trading (BD)","t":"BD","rev":48456.0,"n":2},{"k":"Everbright Casket Services (UT)","t":"UT","rev":42204.0,"n":2},{"k":"Well Wishes Agency (RF)","t":"RF","rev":23478.0,"n":1}],"agent_count":10,"agent_rev":639420.0,"products":[{"p":"Urn","t":"DOUBLE","rev":570400.0,"n":27},{"p":"Land","t":"SDP","rev":253326.0,"n":11},{"p":"Urn","t":"SINGLE","rev":232276.0,"n":13}],"zones":[{"k":"A1","rev":293811.0,"n":11},{"k":"HD(K)","rev":171137.0,"n":9},{"k":"C3","rev":167908.0,"n":10},{"k":"9C","rev":120117.0,"n":5},{"k":"QL(A)","rev":103124.0,"n":5},{"k":"B2","rev":66696.0,"n":5},{"k":"10D","rev":61612.0,"n":3},{"k":"7A","rev":52250.0,"n":2}],"staff":[{"k":"Ravi Kumar","rev":356250.0,"n":17,"mix":[["Direct Team",156255.0],["BD",107531.0],["UT",92464.0]]},{"k":"Adrian Teo","rev":302340.0,"n":13,"mix":[["BD",112827.0],["Direct Team",80918.0],["UT",53963.0],["BM",31154.0],["RF",23478.0]]},{"k":"Mei Lin Chua","rev":194880.0,"n":10,"mix":[["Direct Team",103362.0],["BM",37587.0],["BD",33380.0],["UT",20551.0]]},{"k":"Grace Ho","rev":121057.0,"n":8,"mix":[["Direct Team",56355.0],["UT",48785.0],["BD",15917.0]]},{"k":"Jason Yap","rev":81475.0,"n":3,"mix":[["UT",61783.0],["Direct Team",19692.0]]}],"tiers":[{"k":"Direct Team","rev":416582.0,"n":17},{"k":"UT","rev":277546.0,"n":15},{"k":"BD","rev":269655.0,"n":15},{"k":"BM","rev":68741.0,"n":3},{"k":"RF","rev":23478.0,"n":1}],"routes":[{"k":"Walk In","rev":837687.0,"n":39},{"k":"Digital - Social","rev":218315.0,"n":12}],"chan_actual":{"UT":277546.0,"BA/BM/BD":338396.0,"Walk in/Digital Lead":416582.0,"RF":23478.0}},{"m":4,"name":"April","dim":30,"rev":2268008.0,"n":104,"target":2100000,"days":{"23":[27640.0,2],"29":[198291.0,7],"5":[99716.0,7],"26":[38277.0,2],"25":[107748.0,7],"1":[75862.0,3],"10":[77104.0,5],"11":[88586.0,5],"15":[34927.0,2],"21":[68646.0,3],"8":[91101.0,3],"17":[83372.0,4],"13":[41009.0,3],"22":[87650.0,4],"6":[45223.0,2],"14":[105241.0,4],"20":[75781.0,4],"2":[186204.0,8],"30":[127189.0,4],"12":[79268.0,2],"4":[10210.0,1],"28":[131822.0,4],"18":[99474.0,4],"24":[63359.0,4],"19":[57822.0,2],"16":[24460.0,2],"3":[67586.0,3],"9":[35301.0,1],"7":[39139.0,2]},"best_day":{"d":29,"rev":198291.0,"n":7},"weekday":[{"k":"Mon","rev":162013.0,"n":9},{"k":"Tue","rev":344848.0,"n":13},{"k":"Wed","rev":487831.0,"n":19},{"k":"Thu","rev":400794.0,"n":17},{"k":"Fri","rev":291421.0,"n":16},{"k":"Sat","rev":306018.0,"n":17},{"k":"Sun","rev":275083.0,"n":13}],"booking":{"cases":60,"amount":61000.0},"agents":[{"k":"Sunrise Memorial Agency (BD)","t":"BD","rev":230409.0,"n":10},{"k":"Ban Seng Trading (BD)","t":"BD","rev":216199.0,"n":9},{"k":"Tan & Sons (UT)","t":"UT","rev":211143.0,"n":8},{"k":"Unity Casket House (BD)","t":"BD","rev":168668.0,"n":10},{"k":"Everbright Casket Services (UT)","t":"UT","rev":157139.0,"n":6},{"k":"Harmony Funeral Care (UT)","t":"UT","rev":105467.0,"n":7},{"k":"Lim Brothers Casket (UT)","t":"UT","rev":100162.0,"n":5},{"k":"Golden Lotus Memorial (BD)","t":"BD","rev":80158.0,"n":5},{"k":"Phoenix Services (BM)","t":"BM","rev":67812.0,"n":3},{"k":"Well Wishes Agency (RF)","t":"RF","rev":17346.0,"n":2}],"agent_count":10,"agent_rev":1354503.0,"products":[{"p":"Urn","t":"DOUBLE","rev":1010377.0,"n":49},{"p":"Land","t":"SDP","rev":670032.0,"n":30},{"p":"Urn","t":"SINGLE","rev":587599.0,"n":25}],"zones":[{"k":"C3","rev":476659.0,"n":20},{"k":"A1","rev":388657.0,"n":19},{"k":"B2","rev":363724.0,"n":18},{"k":"8B","rev":231219.0,"n":11},{"k":"HD(K)","rev":196384.0,"n":9},{"k":"9C","rev":185166.0,"n":7},{"k":"10D","rev":176382.0,"n":7},{"k":"QL(A)","rev":172552.0,"n":8}],"staff":[{"k":"Adrian Teo","rev":771911.0,"n":35,"mix":[["BD",312217.0],["Direct Team",272766.0],["UT",119135.0],["BM",50447.0],["RF",17346.0]]},{"k":"Mei Lin Chua","rev":641332.0,"n":28,"mix":[["UT",268804.0],["Direct Team",225431.0],["BD",135223.0],["BM",11874.0]]},{"k":"Grace Ho","rev":388309.0,"n":15,"mix":[["Direct Team",214865.0],["BD",90196.0],["UT",83248.0]]},{"k":"Ravi Kumar","rev":291157.0,"n":15,"mix":[["Direct Team",163040.0],["BD",78461.0],["UT",49656.0]]},{"k":"Jason Yap","rev":175299.0,"n":11,"mix":[["BD",79337.0],["UT",53068.0],["Direct Team",37403.0],["BM",5491.0]]}],"tiers":[{"k":"Direct Team","rev":913505.0,"n":39},{"k":"BD","rev":695434.0,"n":34},{"k":"UT","rev":573911.0,"n":26},{"k":"BM","rev":67812.0,"n":3},{"k":"RF","rev":17346.0,"n":2}],"routes":[{"k":"Walk In","rev":1932386.0,"n":90},{"k":"Digital - Social","rev":335622.0,"n":14}],"chan_actual":{"UT":573911.0,"BA/BM/BD":763246.0,"Walk in/Digital Lead":913505.0,"RF":17346.0}},{"m":5,"name":"May","dim":31,"rev":1295999.0,"n":62,"target":2400000,"days":{"24":[57209.0,3],"4":[59183.0,2],"31":[50697.0,2],"2":[11591.0,2],"6":[99608.0,5],"18":[17737.0,1],"23":[85390.0,3],"28":[8704.0,1],"8":[32914.0,2],"13":[72809.0,2],"3":[47755.0,4],"1":[46935.0,3],"25":[67216.0,3],"19":[84445.0,3],"21":[9116.0,1],"26":[32161.0,2],"9":[19158.0,1],"30":[84772.0,4],"17":[10570.0,1],"11":[50144.0,3],"27":[40206.0,1],"7":[40318.0,2],"20":[81211.0,4],"15":[58364.0,2],"14":[69712.0,3],"5":[31746.0,1],"10":[26328.0,1]},"best_day":{"d":6,"rev":99608.0,"n":5},"weekday":[{"k":"Mon","rev":194280.0,"n":9},{"k":"Tue","rev":148352.0,"n":6},{"k":"Wed","rev":293834.0,"n":12},{"k":"Thu","rev":127850.0,"n":7},{"k":"Fri","rev":138213.0,"n":7},{"k":"Sat","rev":200911.0,"n":10},{"k":"Sun","rev":192559.0,"n":11}],"booking":{"cases":43,"amount":52000.0},"agents":[{"k":"Sunrise Memorial Agency (BD)","t":"BD","rev":141721.0,"n":8},{"k":"Lim Brothers Casket (UT)","t":"UT","rev":130710.0,"n":5},{"k":"Tan & Sons (UT)","t":"UT","rev":124311.0,"n":6},{"k":"Phoenix Services (BM)","t":"BM","rev":85027.0,"n":3},{"k":"Well Wishes Agency (RF)","t":"RF","rev":66310.0,"n":3},{"k":"Harmony Funeral Care (UT)","t":"UT","rev":57872.0,"n":4},{"k":"Unity Casket House (BD)","t":"BD","rev":53971.0,"n":3},{"k":"Everbright Casket Services (UT)","t":"UT","rev":41855.0,"n":3},{"k":"Golden Lotus Memorial (BD)","t":"BD","rev":31819.0,"n":2},{"k":"Ban Seng Trading (BD)","t":"BD","rev":23950.0,"n":2}],"agent_count":10,"agent_rev":757546.0,"products":[{"p":"Urn","t":"DOUBLE","rev":704671.0,"n":32},{"p":"Urn","t":"SINGLE","rev":347491.0,"n":17},{"p":"Land","t":"SDP","rev":243837.0,"n":13}],"zones":[{"k":"QL(A)","rev":280651.0,"n":13},{"k":"C3","rev":237935.0,"n":11},{"k":"A1","rev":188089.0,"n":10},{"k":"HD(K)","rev":179707.0,"n":7},{"k":"B2","rev":165780.0,"n":8},{"k":"8B","rev":89092.0,"n":4},{"k":"10D","rev":70284.0,"n":5},{"k":"9C","rev":57221.0,"n":3}],"staff":[{"k":"Adrian Teo","rev":487202.0,"n":26,"mix":[["Direct Team",220557.0],["UT",127857.0],["BD",100653.0],["RF",31441.0],["BM",6694.0]]},{"k":"Ravi Kumar","rev":328835.0,"n":17,"mix":[["Direct Team",162201.0],["UT",119584.0],["BM",20137.0],["BD",13821.0],["RF",13092.0]]},{"k":"Mei Lin Chua","rev":316758.0,"n":12,"mix":[["UT",107307.0],["Direct Team",92508.0],["BD",58747.0],["BM",58196.0]]},{"k":"Grace Ho","rev":145541.0,"n":6,"mix":[["Direct Team",63187.0],["BD",60577.0],["RF",21777.0]]},{"k":"Jason Yap","rev":17663.0,"n":1,"mix":[["BD",17663.0]]}],"tiers":[{"k":"Direct Team","rev":538453.0,"n":23},{"k":"UT","rev":354748.0,"n":18},{"k":"BD","rev":251461.0,"n":15},{"k":"BM","rev":85027.0,"n":3},{"k":"RF","rev":66310.0,"n":3}],"routes":[{"k":"Walk In","rev":1189075.0,"n":57},{"k":"Digital - Social","rev":106924.0,"n":5}],"chan_actual":{"UT":354748.0,"BA/BM/BD":336488.0,"Walk in/Digital Lead":538453.0,"RF":66310.0}},{"m":6,"name":"June","dim":30,"rev":1703998.0,"n":82,"target":2400000,"days":{"30":[25709.0,2],"16":[63525.0,3],"12":[61092.0,4],"11":[140752.0,8],"28":[78757.0,4],"29":[64211.0,4],"1":[44200.0,2],"9":[55974.0,4],"15":[167226.0,5],"24":[20279.0,1],"13":[22500.0,1],"27":[52161.0,4],"8":[146944.0,4],"17":[11191.0,1],"22":[83573.0,4],"4":[74911.0,3],"6":[66428.0,3],"20":[30938.0,2],"3":[94543.0,5],"18":[58749.0,3],"10":[135711.0,5],"21":[46753.0,1],"25":[17115.0,1],"26":[12760.0,1],"7":[31285.0,2],"23":[26536.0,1],"2":[29357.0,2],"19":[21460.0,1],"14":[19358.0,1]},"best_day":{"d":15,"rev":167226.0,"n":5},"weekday":[{"k":"Mon","rev":506154.0,"n":19},{"k":"Tue","rev":201101.0,"n":12},{"k":"Wed","rev":261724.0,"n":12},{"k":"Thu","rev":291527.0,"n":15},{"k":"Fri","rev":95312.0,"n":6},{"k":"Sat","rev":172027.0,"n":10},{"k":"Sun","rev":176153.0,"n":8}],"booking":{"cases":52,"amount":61000.0},"agents":[{"k":"Everbright Casket Services (UT)","t":"UT","rev":181058.0,"n":8},{"k":"Lim Brothers Casket (UT)","t":"UT","rev":151307.0,"n":9},{"k":"Unity Casket House (BD)","t":"BD","rev":145185.0,"n":6},{"k":"Ban Seng Trading (BD)","t":"BD","rev":113892.0,"n":5},{"k":"Harmony Funeral Care (UT)","t":"UT","rev":109311.0,"n":5},{"k":"Sunrise Memorial Agency (BD)","t":"BD","rev":89612.0,"n":4},{"k":"Tan & Sons (UT)","t":"UT","rev":89422.0,"n":5},{"k":"Phoenix Services (BM)","t":"BM","rev":86248.0,"n":4},{"k":"Well Wishes Agency (RF)","t":"RF","rev":83531.0,"n":5},{"k":"Golden Lotus Memorial (BD)","t":"BD","rev":64822.0,"n":3}],"agent_count":10,"agent_rev":1114388.0,"products":[{"p":"Urn","t":"DOUBLE","rev":902550.0,"n":44},{"p":"Land","t":"SDP","rev":467980.0,"n":23},{"p":"Urn","t":"SINGLE","rev":333468.0,"n":15}],"zones":[{"k":"HD(K)","rev":300941.0,"n":12},{"k":"A1","rev":283992.0,"n":11},{"k":"QL(A)","rev":262552.0,"n":14},{"k":"B2","rev":233886.0,"n":15},{"k":"C3","rev":154647.0,"n":7},{"k":"7A","rev":152388.0,"n":8},{"k":"9C","rev":139181.0,"n":6},{"k":"10D","rev":118602.0,"n":5}],"staff":[{"k":"Mei Lin Chua","rev":621028.0,"n":31,"mix":[["UT",272330.0],["Direct Team",177398.0],["BD",94644.0],["RF",59861.0],["BM",16795.0]]},{"k":"Adrian Teo","rev":437273.0,"n":21,"mix":[["BD",156215.0],["Direct Team",139984.0],["BM",69453.0],["UT",58622.0],["RF",12999.0]]},{"k":"Ravi Kumar","rev":348075.0,"n":14,"mix":[["Direct Team",171702.0],["UT",123634.0],["BD",42068.0],["RF",10671.0]]},{"k":"Grace Ho","rev":212520.0,"n":10,"mix":[["BD",111280.0],["Direct Team",51218.0],["UT",50022.0]]},{"k":"Jason Yap","rev":85102.0,"n":6,"mix":[["Direct Team",49308.0],["UT",26490.0],["BD",9304.0]]}],"tiers":[{"k":"Direct Team","rev":589610.0,"n":28},{"k":"UT","rev":531098.0,"n":27},{"k":"BD","rev":413511.0,"n":18},{"k":"BM","rev":86248.0,"n":4},{"k":"RF","rev":83531.0,"n":5}],"routes":[{"k":"Walk In","rev":1489345.0,"n":73},{"k":"Digital - Social","rev":214653.0,"n":9}],"chan_actual":{"UT":531098.0,"BA/BM/BD":499759.0,"Walk in/Digital Lead":589610.0,"RF":83531.0}},{"m":7,"name":"July","dim":31,"rev":1232002.0,"n":62,"target":1100000,"days":{"13":[66720.0,3],"16":[91183.0,4],"21":[129409.0,6],"24":[70483.0,5],"27":[50650.0,3],"5":[5960.0,1],"7":[24198.0,2],"8":[74879.0,4],"18":[46681.0,3],"2":[15860.0,2],"4":[85752.0,3],"23":[31160.0,1],"12":[122184.0,3],"11":[54625.0,3],"14":[16767.0,1],"26":[5548.0,1],"19":[84835.0,5],"17":[33752.0,1],"22":[16598.0,1],"10":[24000.0,2],"28":[36085.0,2],"25":[36524.0,2],"29":[19332.0,1],"3":[32598.0,1],"9":[29651.0,1],"20":[26568.0,1]},"best_day":{"d":21,"rev":129409.0,"n":6},"weekday":[{"k":"Mon","rev":143938.0,"n":7},{"k":"Tue","rev":206459.0,"n":11},{"k":"Wed","rev":110809.0,"n":6},{"k":"Thu","rev":167854.0,"n":8},{"k":"Fri","rev":160833.0,"n":9},{"k":"Sat","rev":223582.0,"n":11},{"k":"Sun","rev":218527.0,"n":10}],"booking":{"cases":42,"amount":46000.0},"agents":[{"k":"Phoenix Services (BM)","t":"BM","rev":113377.0,"n":5},{"k":"Ban Seng Trading (BD)","t":"BD","rev":111508.0,"n":4},{"k":"Golden Lotus Memorial (BD)","t":"BD","rev":109227.0,"n":6},{"k":"Sunrise Memorial Agency (BD)","t":"BD","rev":69085.0,"n":5},{"k":"Well Wishes Agency (RF)","t":"RF","rev":64937.0,"n":5},{"k":"Everbright Casket Services (UT)","t":"UT","rev":61098.0,"n":3},{"k":"Harmony Funeral Care (UT)","t":"UT","rev":46944.0,"n":3},{"k":"Tan & Sons (UT)","t":"UT","rev":34829.0,"n":2},{"k":"Lim Brothers Casket (UT)","t":"UT","rev":30924.0,"n":2},{"k":"Unity Casket House (BD)","t":"BD","rev":28956.0,"n":3}],"agent_count":10,"agent_rev":670885.0,"products":[{"p":"Urn","t":"DOUBLE","rev":619693.0,"n":30},{"p":"Land","t":"SDP","rev":341115.0,"n":19},{"p":"Urn","t":"SINGLE","rev":271194.0,"n":13}],"zones":[{"k":"QL(A)","rev":312248.0,"n":12},{"k":"HD(K)","rev":183459.0,"n":8},{"k":"C3","rev":169079.0,"n":7},{"k":"B2","rev":162042.0,"n":10},{"k":"9C","rev":99889.0,"n":4},{"k":"10D","rev":81332.0,"n":4},{"k":"8B","rev":81329.0,"n":5},{"k":"7A","rev":78565.0,"n":6}],"staff":[{"k":"Adrian Teo","rev":406485.0,"n":21,"mix":[["Direct Team",201816.0],["BD",72922.0],["UT",62440.0],["BM",48150.0],["RF",21157.0]]},{"k":"Mei Lin Chua","rev":387659.0,"n":22,"mix":[["BD",191793.0],["UT",92242.0],["Direct Team",62967.0],["BM",35109.0],["RF",5548.0]]},{"k":"Ravi Kumar","rev":170201.0,"n":9,"mix":[["Direct Team",131969.0],["RF",38232.0]]},{"k":"Jason Yap","rev":135911.0,"n":6,"mix":[["BD",54061.0],["Direct Team",32619.0],["BM",30118.0],["UT",19113.0]]},{"k":"Grace Ho","rev":131746.0,"n":4,"mix":[["Direct Team",131746.0]]}],"tiers":[{"k":"Direct Team","rev":561117.0,"n":24},{"k":"BD","rev":318776.0,"n":18},{"k":"UT","rev":173795.0,"n":10},{"k":"BM","rev":113377.0,"n":5},{"k":"RF","rev":64937.0,"n":5}],"routes":[{"k":"Walk In","rev":1051719.0,"n":55},{"k":"Digital - Social","rev":180283.0,"n":7}],"chan_actual":{"UT":173795.0,"BA/BM/BD":432153.0,"Walk in/Digital Lead":561117.0,"RF":64937.0}},{"m":8,"name":"August","dim":31,"rev":754001.0,"n":36,"target":1300000,"days":{"1":[87762.0,3],"8":[26286.0,1],"11":[34565.0,2],"22":[54185.0,2],"16":[41321.0,2],"19":[79399.0,2],"2":[33566.0,3],"6":[61239.0,3],"4":[12987.0,1],"17":[17495.0,2],"30":[39538.0,2],"23":[25157.0,1],"18":[61327.0,1],"5":[13792.0,1],"27":[13286.0,1],"9":[49519.0,3],"26":[12264.0,1],"10":[29958.0,1],"20":[21561.0,2],"29":[15854.0,1],"3":[22940.0,1]},"best_day":{"d":1,"rev":87762.0,"n":3},"weekday":[{"k":"Mon","rev":70393.0,"n":4},{"k":"Tue","rev":108879.0,"n":4},{"k":"Wed","rev":105455.0,"n":4},{"k":"Thu","rev":96086.0,"n":6},{"k":"Fri","rev":0.0,"n":0},{"k":"Sat","rev":184087.0,"n":7},{"k":"Sun","rev":189101.0,"n":11}],"booking":{"cases":23,"amount":25500.0},"agents":[{"k":"Golden Lotus Memorial (BD)","t":"BD","rev":105843.0,"n":4},{"k":"Unity Casket House (BD)","t":"BD","rev":103169.0,"n":4},{"k":"Harmony Funeral Care (UT)","t":"UT","rev":89889.0,"n":3},{"k":"Tan & Sons (UT)","t":"UT","rev":58426.0,"n":4},{"k":"Sunrise Memorial Agency (BD)","t":"BD","rev":53604.0,"n":3},{"k":"Phoenix Services (BM)","t":"BM","rev":47727.0,"n":2},{"k":"Lim Brothers Casket (UT)","t":"UT","rev":43686.0,"n":2},{"k":"Ban Seng Trading (BD)","t":"BD","rev":42455.0,"n":3},{"k":"Well Wishes Agency (RF)","t":"RF","rev":25157.0,"n":1}],"agent_count":9,"agent_rev":569956.0,"products":[{"p":"Urn","t":"DOUBLE","rev":397450.0,"n":20},{"p":"Land","t":"SDP","rev":192987.0,"n":9},{"p":"Urn","t":"SINGLE","rev":163564.0,"n":7}],"zones":[{"k":"HD(K)","rev":158764.0,"n":5},{"k":"A1","rev":142991.0,"n":7},{"k":"B2","rev":100757.0,"n":6},{"k":"QL(A)","rev":100046.0,"n":5},{"k":"9C","rev":93711.0,"n":3},{"k":"C3","rev":58456.0,"n":4},{"k":"10D","rev":51441.0,"n":3},{"k":"8B","rev":47835.0,"n":3}],"staff":[{"k":"Adrian Teo","rev":244562.0,"n":15,"mix":[["Direct Team",104904.0],["BD",68320.0],["UT",46181.0],["RF",25157.0]]},{"k":"Grace Ho","rev":205896.0,"n":7,"mix":[["BD",92009.0],["UT",50585.0],["BM",33292.0],["Direct Team",30010.0]]},{"k":"Ravi Kumar","rev":186277.0,"n":7,"mix":[["BD",96699.0],["UT",89578.0]]},{"k":"Mei Lin Chua","rev":86506.0,"n":5,"mix":[["Direct Team",49131.0],["BD",22940.0],["BM",14435.0]]},{"k":"Jason Yap","rev":30760.0,"n":2,"mix":[["BD",25103.0],["UT",5657.0]]}],"tiers":[{"k":"BD","rev":305071.0,"n":14},{"k":"UT","rev":192001.0,"n":9},{"k":"Direct Team","rev":184045.0,"n":10},{"k":"BM","rev":47727.0,"n":2},{"k":"RF","rev":25157.0,"n":1}],"routes":[{"k":"Walk In","rev":691436.0,"n":32},{"k":"Digital - Social","rev":62565.0,"n":4}],"chan_actual":{"UT":192001.0,"BA/BM/BD":352798.0,"Walk in/Digital Lead":184045.0,"RF":25157.0}}],"staff_tgt":{"Adrian Teo":[270000.0,300000.0,480000.0,630000.0,720000.0,720000.0,330000.0,390000.0,510000.0,570000.0,570000.0,450000.0],"Mei Lin Chua":[225000.0,250000.0,400000.0,525000.0,600000.0,600000.0,275000.0,325000.0,425000.0,475000.0,475000.0,375000.0],"Ravi Kumar":[180000.0,200000.0,320000.0,420000.0,480000.0,480000.0,220000.0,260000.0,340000.0,380000.0,380000.0,300000.0],"Grace Ho":[135000.0,150000.0,240000.0,315000.0,360000.0,360000.0,165000.0,195000.0,255000.0,285000.0,285000.0,225000.0],"Jason Yap":[90000.0,100000.0,160000.0,210000.0,240000.0,240000.0,110000.0,130000.0,170000.0,190000.0,190000.0,150000.0]},"chan_tgt":{"UT":[252000,280000,448000,588000,672000,672000,308000,364000,476000,532000,532000,420000],"BA/BM/BD":[378000,420000,672000,882000,1008000,1008000,462000,546000,714000,798000,798000,630000],"Walk in/Digital Lead":[216000,240000,384000,504000,576000,576000,264000,312000,408000,456000,456000,360000],"RF":[54000,60000,96000,126000,144000,144000,66000,78000,102000,114000,114000,90000]},"park_tgt":[900000,1000000,1600000,2100000,2400000,2400000,1100000,1300000,1700000,1900000,1900000,1500000],"ytd_rev":9358014.0,"ytd_n":442};
+var SHORT=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var TIER={BD:'Business Director',BM:'Business Manager',BA:'Business Advisor',UT:'Undertaker',
+RF:'Referral','Direct Team':'Direct team (staff)'};
+var YR=+String(D.as_of).slice(0,4)||2026;
+var ELAPSED=+String(D.as_of).slice(8,10)||0;   /* days of the live month already banked */
+var STORE='pmp-dash-month';
+function bonanza(mi){return mi===7?'<p class="note"><b>July Bonanza:</b> RM 3,888 per full RM 60,000 of net revenue. Paid RM 19,440 &mdash; Unity Casket House (2 blocks: BD + UT), Everbright, Ban Seng. Remainders carried forward.</p>':'';}
+
+function fmt(v){var a=Math.abs(v),s=v<0?'-':'';
+if(a>=1e6)return s+'RM '+(a/1e6).toFixed(2)+'m';
+if(a>=1e3)return s+'RM '+Math.round(a).toLocaleString('en-US');
+return s+'RM '+Math.round(a);}
+function pct(v){return Math.round(v*100)+'%';}
+function cls(p){return p>=1?'healthy':(p>=.7?'watch':(p>=.4?'watch':'critical'));}
+function lbl(p){return p>=1?'On target':(p>=.7?'Close':(p>=.4?'Behind':'Far behind'));}
+function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
+
+/* Bullet bars run to 150% of target so an over-performing month is unmistakably
+   past the tick rather than pinned against the end of the rail. */
+var CAP=1.5;
+function bullet(a,t){var p=t>0?a/t:0,w=Math.min(p,CAP)/CAP*100,tick=100/CAP;
+var c=p>=1?'ok':(p>=.4?'':'bad');
+return '<div class="bullet" role="img" aria-label="'+pct(p)+' of target">'+
+'<span class="fill '+c+'" style="width:'+w.toFixed(1)+'%"></span>'+
+'<span class="tick" style="left:'+tick.toFixed(1)+'%"></span></div>';}
+function sbar(v,mx){return '<div class="sbar"><i style="width:'+
+(mx>0?Math.min(v/mx*100,100):0).toFixed(1)+'%"></i></div>';}
+/* no target on record — a hairline keeps the column rhythm without drawing a 0% bar */
+function norail(){return '<div class="bullet na" aria-hidden="true"></div>';}
+
+/* top-rounded bar path — SVG rx would round all four corners */
+function barPath(x,y,w,h){var r=Math.min(4,w/2,h);
+return 'M'+x.toFixed(1)+' '+(y+h).toFixed(1)+'V'+(y+r).toFixed(1)+
+'Q'+x.toFixed(1)+' '+y.toFixed(1)+' '+(x+r).toFixed(1)+' '+y.toFixed(1)+
+'H'+(x+w-r).toFixed(1)+'Q'+(x+w).toFixed(1)+' '+y.toFixed(1)+' '+(x+w).toFixed(1)+' '+(y+r).toFixed(1)+
+'V'+(y+h).toFixed(1)+'Z';}
+
+/* On a phone the axis drops the RM prefix — the panel copy and legend already carry
+   the unit, and a 10-character label will not fit the gutter at that width. */
+function fmtAxis(v,narrow){if(!narrow)return fmt(v);
+var a=Math.abs(v);
+if(a>=1e6)return (a/1e6).toFixed(1)+'m';
+if(a>=1e3)return Math.round(a/1e3)+'k';
+return String(Math.round(a));}
+
+/* A published chart lands on round numbers. Scaling the axis to the tallest bar gave
+   ticks like "RM 181,084" — a data artefact, not a figure a reader can hold. This picks
+   a 1/2/2.5/4/5 x 10^n step so every gridline reads as money. */
+function niceStep(raw,divs){
+var rough=raw/divs,mag=Math.pow(10,Math.floor(Math.log(rough)/Math.LN10)),f=rough/mag;
+return mag*(f<=1?1:(f<=2?2:(f<=2.5?2.5:(f<=4?4:(f<=5?5:10)))));}
+
+/* ts = tick text size in viewBox units. Screen uses 12.5; print draws the chart 1:1
+   at 16 units so the axis prints at exactly 12pt. The gutter scales with it. */
+function dailySVG(M,w,ts){
+ts=ts||13;
+var k2=ts/13,narrow=w<560;
+var h=Math.round((w<560?230:(w<900?250:270))+(ts-13)*3);
+var pl=Math.round((narrow?42:90)*k2),pr=narrow?8:14,pb=Math.round((narrow?30:32)*k2),pt=16,n=M.dim;
+var raw=1;for(var k in M.days)raw=Math.max(raw,M.days[k][0]);
+var guide=M.target/M.dim;raw=Math.max(raw*1.06,guide*1.15);
+var divs=narrow?2:4,step=niceStep(raw,divs),mx=step*divs;
+var iw=w-pl-pr,ih=h-pb-pt,bw=iw/n,s='';
+
+/* weekend bands first so bars and gridlines sit above them */
+var firstDow=new Date(YR,M.m-1,1).getDay();
+for(var d=1;d<=n;d++){var dow=(firstDow+d-1)%7;
+if(dow===0||dow===6)s+='<rect class="wknd" x="'+(pl+bw*(d-1)).toFixed(1)+'" y="'+(pt+ih+2)+
+'" width="'+bw.toFixed(1)+'" height="3"/>';}
+
+for(var g=0;g<=divs;g++){var y=pt+ih-ih*g/divs;
+if(g>0)s+='<line x1="'+pl+'" y1="'+y.toFixed(1)+'" x2="'+(w-pr)+'" y2="'+y.toFixed(1)+'" class="gl"/>';
+s+='<text x="'+(pl-10)+'" y="'+(y+ts*.35).toFixed(1)+'" class="ytick" font-size="'+ts+'">'+
+fmtAxis(step*g,narrow)+'</text>';}
+
+/* thin the day labels so they never collide once bars get narrow */
+var step=bw<9*k2?10:5;
+for(var d2=1;d2<=n;d2++){var x0=pl+bw*(d2-1);
+var v=M.days[d2]?M.days[d2][0]:0;
+if(v>0){var hh=Math.max(ih*v/mx,2);
+s+='<path class="dbar" data-tip="'+d2+' '+M.name+' — '+fmt(v)+' · '+M.days[d2][1]+' sale'+(M.days[d2][1]===1?'':'s')+'" d="'+barPath(x0+bw*.21,pt+ih-hh,bw*.58,hh)+'"><title>'+
+d2+' '+M.name+': '+fmt(v)+' &#183; '+M.days[d2][1]+' sale'+(M.days[d2][1]===1?'':'s')+'</title></path>';}
+if(d2===1||(d2%step===0&&d2<=n-2))
+s+='<text x="'+(x0+bw/2).toFixed(1)+'" y="'+(h-Math.round(10*k2))+'" class="xtick" font-size="'+
+ts+'">'+d2+'</text>';}
+
+/* the pace figure lives in the legend, not on the plot — an in-chart label
+   collides with whichever bar happens to be tall that month */
+var gy=pt+ih-ih*guide/mx;
+s+='<line x1="'+pl+'" y1="'+gy.toFixed(1)+'" x2="'+(w-pr)+'" y2="'+gy.toFixed(1)+'" class="guide"/>';
+/* a weighted zero baseline — the rule every printed chart sits on */
+s+='<line x1="'+pl+'" y1="'+(pt+ih)+'" x2="'+(w-pr)+'" y2="'+(pt+ih)+'" class="axis"/>';
+/* A screen reader gets no shape from the bars, so the label carries the numbers */
+var sold=Object.keys(M.days).length;
+return '<svg viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'" class="chart" role="img" '+
+'aria-label="Daily sales for '+M.name+'. '+fmt(M.rev)+' across '+M.n+' sales on '+sold+
+' trading days. Best day '+M.best_day.d+' '+M.name+' at '+fmt(M.best_day.rev)+
+'. Reaching target needs '+fmt(guide)+' a day.">'+s+'</svg>';}
+
+/* Redraw the chart against the live container width. Called after every render and,
+   debounced, on resize — so the axis text is always true-size, never scaled down. */
+var CUR=null,rt=null;
+function drawChart(pw,pts){
+var box=document.getElementById('chartwrap');
+if(!box||CUR===null)return;
+var w=pw||Math.max(280,Math.round(box.clientWidth||box.getBoundingClientRect().width||900));
+box.innerHTML=dailySVG(D.months[CUR-1],w,pts);}
+window.addEventListener('resize',function(){
+clearTimeout(rt);rt=setTimeout(function(){drawChart();},140);});
+/* 620 units = 6.46in, so the printed chart is 1:1 and its 16-unit axis text is 12pt */
+window.addEventListener('beforeprint',function(){drawChart(620,16);});
+window.addEventListener('afterprint',function(){drawChart();});
+
+function render(mi){
+CUR=mi;
+var M=D.months[mi-1],prev=mi>1?D.months[mi-2]:null;
+var p=M.target>0?M.rev/M.target:0;
+var live=(mi===D.el),elapsed=live?ELAPSED:M.dim;
+var sellDays=Object.keys(M.days).length;
+var avgDay=M.rev/Math.max(1,sellDays);
+var delta=prev?(M.rev-prev.rev):null;
+var proj=live&&elapsed>0?M.rev/elapsed*M.dim:M.rev;
+
+document.getElementById('mtitle').textContent=M.name;
+document.querySelectorAll('.chip').forEach(function(c){
+c.setAttribute('aria-pressed',c.dataset.m==mi?'true':'false');});
+document.getElementById('switchlab').textContent=
+live?'Select a month — '+M.name+' is still running':'Select a month';
+
+
+/* ---- daily-first strip: the last 14 banked days, independent of the selected month ---- */
+function dailyStrip(){
+var L=D.months[D.el-1],P=D.el>1?D.months[D.el-2]:null;
+var seq=[];
+if(P){for(var d0=1;d0<=P.dim;d0++)seq.push({m:P.m,d:d0,v:P.days[d0]?P.days[d0][0]:0,n:P.days[d0]?P.days[d0][1]:0});}
+var lastD=0;for(var k in L.days)lastD=Math.max(lastD,+k);
+for(var d1=1;d1<=lastD;d1++)seq.push({m:L.m,d:d1,v:L.days[d1]?L.days[d1][0]:0,n:L.days[d1]?L.days[d1][1]:0});
+var last14=seq.slice(-14);
+var latest=null;for(var i2=seq.length-1;i2>=0;i2--){if(seq[i2].v>0){latest=seq[i2];break;}}
+var w7=0;seq.slice(-7).forEach(function(x){w7+=x.v;});
+var mx=1;last14.forEach(function(x){mx=Math.max(mx,x.v);});
+var bars='';
+last14.forEach(function(x){
+var h=Math.max(2,Math.round(x.v/mx*34));
+bars+='<div class="dscol" data-tip="'+x.d+' '+SHORT[x.m-1]+' — '+fmt(x.v)+' · '+x.n+' sales">'+
+'<i style="height:'+h+'px"></i><span>'+x.d+'</span></div>';});
+return '<div class="dstrip" data-od-id="daily-strip">'+
+'<div class="dshead"><span class="lab">Daily sales &mdash; last 14 days</span>'+
+(latest?'<span class="dslatest">Latest: <b>'+latest.d+' '+SHORT[latest.m-1]+' &middot; '+fmt(latest.v)+'</b>'+
+' &nbsp;&#183;&nbsp; 7-day total <b>'+fmt(w7)+'</b></span>':'')+
+'</div><div class="dsbars">'+bars+'</div></div>';
+}
+/* ---- lead statement: one figure, one sentence, four supporting numbers ---- */
+var vc,tag,say;
+if(live){
+vc=proj>=M.target?'good':(proj>=M.target*.7?'mid':'bad');
+tag=proj>=M.target?'On track':(proj>=M.target*.7?'Watch':'Behind');
+say=pct(p)+' of the '+fmt(M.target)+' target with '+(M.dim-elapsed)+' days still to run. '+
+'At this pace '+M.name+' finishes near <b>'+fmt(proj)+'</b> &mdash; about '+
+(proj>=M.target?fmt(proj-M.target)+' above target.'
+ :fmt(M.target-proj)+' short, with '+fmt(M.target-M.rev)+' left to bank.');
+}else if(p>=1){vc='good';tag='On target';
+say=pct(p)+' of the '+fmt(M.target)+' target &mdash; <b>'+fmt(M.rev-M.target)+'</b> ahead, '+
+'across '+M.n+' sales.';
+}else{vc=p>=.7?'mid':'bad';tag=p>=.7?'Close':'Behind';
+say=pct(p)+' of the '+fmt(M.target)+' target &mdash; <b>'+fmt(M.target-M.rev)+'</b> short, '+
+'across '+M.n+' sales.';}
+
+var period=live?(M.name+' &#183; to '+elapsed+' of '+M.dim+' days'):(M.name+' &#183; closed');
+var dcls=delta===null?'':(delta>=0?'up':'down');
+var dtxt=delta===null?'First month of the year'
+ :((delta>=0?'&#9650; ':'&#9660; ')+fmt(Math.abs(delta))+' vs '+prev.name);
+
+document.getElementById('lead').innerHTML=
+'<div class="lead-fig '+(vc==='good'?'is-good':(vc==='bad'?'is-bad':''))+'" data-od-id="lead-figure">'+
+'<p class="per">'+period+'</p>'+
+'<span class="mark '+vc+'">'+tag+'</span>'+
+'<div class="v">'+fmt(M.rev)+'</div>'+
+'<p class="say">'+say+'</p></div>'+
+'<div class="keyfig" data-od-id="key-figures">'+
+'<div class="r"><div class="k">Sales closed<span class="s '+dcls+'">'+dtxt+'</span></div>'+
+'<div class="n">'+M.n+'</div></div>'+
+'<div class="r"><div class="k">Booking deposits<span class="s">'+M.booking.cases+
+' deposit-backed sales</span></div><div class="n">'+fmt(M.booking.amount)+'</div></div>'+
+'<div class="r"><div class="k">Best day<span class="s">'+M.best_day.d+' '+M.name+' &#183; '+
+M.best_day.n+' sale'+(M.best_day.n===1?'':'s')+'</span></div>'+
+'<div class="n">'+fmt(M.best_day.rev)+'</div></div>'+
+'<div class="r"><div class="k">Average selling day<span class="s">across '+sellDays+
+' days with a sale</span></div><div class="n">'+fmt(avgDay)+'</div></div></div>'+dailyStrip();
+
+var g='';
+/* ---- 1. daily rhythm ---- */
+g+='<p class="movement" data-od-id="movement-one"><span class="rn">I</span>'+
+'<span class="rt">Performance against target</span></p>';
+
+g+='<div class="card w" data-od-id="panel-daily-sales"><p class="eyebrow"><span class="n">01</span>Daily rhythm</p>'+
+'<h2>Every day of '+M.name+'</h2>'+
+'<p class="sub">Each bar is one day of signed sales. Hover a bar for the exact figure.</p>'+
+'<div class="chartwrap" id="chartwrap"></div>'+
+'<div class="legend"><span><i class="bar"></i>Sales that day</span>'+
+'<span><i class="gd"></i>'+fmt(M.target/M.dim)+' a day &mdash; the pace that reaches target</span>'+
+'<span><i class="wk"></i>Weekend</span></div></div>';
+
+/* ---- 6. booking deposits ---- */
+g+='<div class="card c7" data-od-id="panel-booking"><p class="eyebrow"><span class="n">06</span>Pipeline</p>'+
+'<h2>Booking deposits</h2><p class="sub">Money placed to hold a plot, month by month.</p>'+
+'<div class="twin"><div><div class="big">'+fmt(M.booking.amount)+'</div>'+
+'<div class="cap">collected in '+M.name+'</div></div>'+
+'<div><div class="big">'+M.booking.cases+'</div>'+
+'<div class="cap">sales that began with a deposit</div></div></div>';
+var bmax=1;D.months.forEach(function(x){bmax=Math.max(bmax,x.booking.amount);});
+D.months.forEach(function(x){
+g+='<div class="mix'+(x.m===mi?' now':'')+'"><div class="t">'+
+'<span class="k'+(x.m===mi?'':' dim')+'">'+x.name+'</span>'+
+'<span class="s">'+fmt(x.booking.amount)+' &#183; '+x.booking.cases+'</span></div>'+
+sbar(x.booking.amount,bmax)+'</div>';});
+g+='</div>';
+
+/* ---- 4. agents ---- */
+g+='<p class="movement" data-od-id="movement-two"><span class="rn">II</span>'+
+'<span class="rt">What made up the month</span></p>';
+
+/* A partner row always carries a parenthesised tier — "Tan & Sons (UT)". The source's
+   agent column also holds walk-ins and web leads, which carry none; counting those as
+   partners overstated partner-sourced revenue in the headline. They are separated here
+   rather than dropped, so the total still reconciles and the data fault stays visible. */
+var agP=[],agD=[],revP=0,revD=0,revShown=0;
+M.agents.forEach(function(a){revShown+=a.rev;
+if(/\(/.test(a.k)){agP.push(a);revP+=a.rev;}else{agD.push(a);revD+=a.rev;}});
+/* The agents array is a top-N cut while agent_count/agent_rev describe every agent.
+   Stating the full total over a truncated table left April short by RM 509,260 with
+   nothing on the page to say so, so the residual is now named. */
+var agN=M.agent_count||M.agents.length,agR=(M.agent_rev===undefined?revShown:M.agent_rev);
+var agHid=Math.max(0,agN-M.agents.length),agHidRev=Math.max(0,agR-revShown);
+function arow(a,c){return '<tr'+(c?' class="'+c+'"':'')+'><td>'+esc(a.k)+'</td>'+
+'<td><span class="tag">'+esc(a.t)+'</span></td>'+
+'<td class="r amt">'+fmt(a.rev)+'</td><td class="r dim">'+a.n+'</td></tr>';}
+
+g+='<div class="card c7" data-od-id="panel-agents"><p class="eyebrow"><span class="n">04</span>Partners</p><h2>Agent sales</h2>'+
+'<p class="sub">'+(M.agents.length
+ ? agN+' agent'+(agN===1?'':'s')+' produced a sale in '+M.name+
+   ', worth '+fmt(agR)+' together.'+
+   (agHid?' The '+M.agents.length+' largest are listed; the other '+agHid+
+     ' account for '+fmt(agHidRev)+'.':'')
+ : 'No agent-sourced sales were recorded in '+M.name+'.')+'</p>';
+if(!M.agents.length){g+='<p class="empty">No agent-sourced sales were recorded this month.</p>';}
+else{g+='<div class="tw"><table><thead><tr><th scope="col">Agent</th><th scope="col">Tier</th>'+
+'<th scope="col" class="r">Sold</th><th scope="col" class="r">Sales</th></tr></thead><tbody>';
+agP.forEach(function(a){g+=arow(a,'');});
+if(agD.length)g+='<tr class="sep"><td colspan="4">Not a partner &#183; '+fmt(revD)+
+' of the rows listed</td></tr>';
+agD.forEach(function(a){g+=arow(a,'direct');});
+g+='</tbody></table></div>';}
+g+=bonanza(mi)+'</div>';
+
+/* ---- 5. products + zones ---- */
+g+='<div class="card c5" data-od-id="panel-products"><p class="eyebrow"><span class="n">05</span>What sold</p>'+
+'<h2>Products and zones</h2><p class="sub">Revenue by product in '+M.name+'.</p>';
+var pmax=M.products.length?M.products[0].rev:1;
+if(!M.products.length)g+='<p class="empty">No products recorded for '+M.name+' yet.</p>';
+M.products.forEach(function(x){
+g+='<div class="mix"><div class="t"><span class="k">'+esc(x.p)+' &#183; '+esc(x.t)+'</span>'+
+'<span class="s">'+fmt(x.rev)+' &#183; '+x.n+' sold</span></div>'+sbar(x.rev,pmax)+'</div>';});
+var zmax=M.zones.length?M.zones[0].rev:1;
+g+='<p class="note tight"><b>Busiest zones</b></p>';
+if(!M.zones.length)g+='<p class="empty">No zone recorded for '+M.name+' yet.</p>';
+M.zones.slice(0,5).forEach(function(z){
+g+='<div class="mix"><div class="t"><span class="k">'+esc(z.k)+'</span>'+
+'<span class="s">'+fmt(z.rev)+' &#183; '+z.n+'</span></div>'+sbar(z.rev,zmax)+'</div>';});
+g+='</div>';
+
+/* ---- 2. staff ---- */
+g+='<div class="card c5" data-od-id="panel-staff-sales"><p class="eyebrow"><span class="n">02</span>People</p>'+
+'<h2>Staff personal sales</h2>'+
+'<p class="sub">'+M.name+' actual against each person&#39;s own monthly target. '+
+'The notch on every bar marks 100%.</p>';
+var seen={};
+M.staff.forEach(function(s){seen[s.k]=s;});
+Object.keys(D.staff_tgt).forEach(function(nm){
+var t=D.staff_tgt[nm][mi-1],s=seen[nm]||{rev:0,n:0,mix:[]};
+var mixs=s.mix&&s.mix.length?s.mix.slice(0,2).map(function(x){
+return x[0]+' '+pct(x[1]/s.rev);}).join(' &#183; '):'';
+g+='<div class="br"><div class="nm">'+esc(nm)+(mixs?'<span class="s">'+mixs+'</span>':'')+'</div>'+
+(t>0?bullet(s.rev,t):norail())+
+'<div class="val"><b>'+fmt(s.rev)+'</b>'+(t>0?('of '+fmt(t)+' &#183; '+pct(s.rev/t)):'no target set')+
+'</div></div>';
+delete seen[nm];});
+Object.keys(seen).forEach(function(nm){var s=seen[nm];if(s.rev<=0)return;
+g+='<div class="br"><div class="nm">'+esc(nm)+'<span class="s">no target set</span></div>'+
+norail()+'<div class="val"><b>'+fmt(s.rev)+'</b>'+s.n+' sales</div></div>';});
+g+='<p class="note">BD / BM / BA = Business Director, Manager, Advisor. '+
+'UT = Undertaker. RF = Referral. The percentages under a name are that person&#39;s two biggest sources.</p></div>';
+
+/* ---- 3. channels ---- */
+/* Tier (who closed it) and route (how the customer arrived) are two INDEPENDENT
+   partitions of the same revenue — each sums to the full month. Listing BD/BM/BA/RF
+   beside Digital Lead/Walk-in as one six-way split would count the month twice, so
+   the two cuts are labelled separately and the sub says they are not additive.
+   The target sheet's "Walk in/Digital Lead" line is the direct-team figure and has
+   nothing to do with the walk-in route below it; that collision is named here. */
+var CHAN={'UT':['Undertaker','UT'],
+'BA/BM/BD':['BD / BM / BA','Director, Manager, Advisor'],
+'Walk in/Digital Lead':['Direct team','staff-closed &#183; not the walk-in route'],
+'RF':['Referral','RF']};
+var tOrder=['BD','BM','BA','UT','RF','Direct Team'];
+M.tiers.forEach(function(r){if(tOrder.indexOf(r.k)<0)tOrder.push(r.k);});
+var tby={};M.tiers.forEach(function(r){tby[r.k]=r;});
+var tmax=M.tiers.length?M.tiers[0].rev:1;
+
+g+='<div class="card c7" data-od-id="panel-channels"><p class="eyebrow"><span class="n">03</span>Where sales come from</p>'+
+'<h2>Channels</h2><p class="sub">Three views of the same '+fmt(M.rev)+'. The tier and route lists '+
+'each account for the whole month, so they are not added together.</p>';
+
+g+='<p class="note tight"><b>Against target</b> &mdash; the four lines the target sheet carries</p>';
+['UT','BA/BM/BD','Walk in/Digital Lead','RF'].forEach(function(ch){
+var a=M.chan_actual[ch]||0,t=D.chan_tgt[ch][mi-1],c=CHAN[ch]||[ch,''];
+g+='<div class="br"><div class="nm">'+c[0]+'<span class="s">'+c[1]+'</span></div>'+bullet(a,t)+
+'<div class="val"><b>'+fmt(a)+'</b>of '+fmt(t)+' &#183; '+pct(t>0?a/t:0)+'</div></div>';});
+
+g+='<p class="note tight"><b>Who closed it</b> &mdash; by tier</p>';
+tOrder.forEach(function(k){var r=tby[k];
+g+='<div class="mix"><div class="t"><span class="k'+(r?'':' dim')+'">'+esc(TIER[k]||k)+'</span>'+
+'<span class="s">'+(r?fmt(r.rev)+' &#183; '+r.n:'no sales on record')+'</span></div>'+
+sbar(r?r.rev:0,tmax)+'</div>';});
+
+var rmax=M.routes.length?M.routes[0].rev:1;
+g+='<p class="note tight"><b>How the customer arrived</b> &mdash; by route</p>';
+if(!M.routes.length)g+='<p class="empty">No arrival source recorded for '+M.name+' yet.</p>';
+M.routes.forEach(function(r){
+g+='<div class="mix"><div class="t"><span class="k">'+esc(r.k)+'</span>'+
+'<span class="s">'+fmt(r.rev)+' &#183; '+r.n+'</span></div>'+sbar(r.rev,rmax)+'</div>';});
+g+='</div>';
+
+/* ---- 7. weekday + standing ---- */
+g+='<div class="card c5" data-od-id="panel-weekday"><p class="eyebrow"><span class="n">07</span>When people buy</p>'+
+'<h2>Sales by weekday</h2><p class="sub">'+M.name+' revenue grouped by day of the week.</p>';
+var wmax=1;M.weekday.forEach(function(x){wmax=Math.max(wmax,x.rev);});
+M.weekday.forEach(function(x){
+g+='<div class="mix"><div class="t"><span class="k'+(x.rev?'':' dim')+'">'+x.k+'</span>'+
+'<span class="s">'+(x.n?fmt(x.rev)+' &#183; '+x.n:'no sales')+'</span></div>'+
+sbar(x.rev,wmax)+'</div>';});
+/* The month verdict used to be repeated here, under the weekday data, where it had no
+   business being — the lead statement already carries it in full. */
+var best=M.weekday.reduce(function(a,b){return b.rev>a.rev?b:a;},M.weekday[0]);
+g+='<p class="note">'+(best&&best.rev>0
+ ?('<b>'+best.k+'</b> is '+M.name+'&rsquo;s strongest day at '+fmt(best.rev)+
+   ' across '+best.n+' sale'+(best.n===1?'':'s')+'.')
+ :'No sales recorded yet this month.')+'</p></div>';
+
+document.getElementById('grid').innerHTML=g;
+drawChart();
+try{localStorage.setItem(STORE,String(mi));}catch(e){}
+}
+
+function boot(){
+/* ---- month switcher ---- */
+var chips='';
+D.months.forEach(function(M,i){
+var p=M.target>0?M.rev/M.target:0;
+chips+='<button type="button" class="chip'+(p>=1?' hit':'')+'" data-m="'+(i+1)+'" aria-pressed="false" '+
+'title="'+M.name+': '+pct(p)+' of target">'+SHORT[i]+'<span class="pc">'+pct(p)+'</span></button>';});
+for(var i=D.el;i<12;i++){
+chips+='<button type="button" class="chip" disabled title="'+SHORT[i]+': no data yet">'+
+SHORT[i]+'<span class="pc">&ndash;</span></button>';}
+document.getElementById('chips').innerHTML=chips;
+document.getElementById('chips').addEventListener('click',function(e){
+var b=e.target.closest('.chip');
+if(b&&!b.disabled&&b.dataset.m)render(+b.dataset.m);});
+
+/* Year to date — the board's standing question, from figures already in the source file */
+(function(){
+var tgt=0;for(var t=0;t<D.el;t++)tgt+=D.park_tgt[t];
+var first=D.months[0].name,liveM=D.months[D.el-1];
+document.getElementById('ytd').innerHTML='<span class="lab">Year to date</span>'+
+'<b>'+fmt(D.ytd_rev)+'</b> from <b>'+D.ytd_n+'</b> sales &mdash; '+pct(tgt>0?D.ytd_rev/tgt:0)+
+' of the '+fmt(tgt)+' targeted across '+first+'&ndash;'+liveM.name+
+', with '+liveM.name+' still running.';})();
+
+document.getElementById('foot').innerHTML='Source: demo-data.xlsx ('+D.ytd_n+' sales to '+D.as_of+'), verified against platform records (354/354, no phantom sales). Targets: All Park KPI / Monthly Group &amp; Personal Sales v1.0. Kulai park only &mdash; UC and Ipoh files not current.';
+
+var start=D.el;
+try{var saved=+localStorage.getItem(STORE);
+if(saved>=1&&saved<=D.el)start=saved;}catch(e){}
+render(start);
+}
+
+/* A board pack that silently renders half a page is worse than one that says it broke.
+   If the source data is malformed, say so instead of leaving a white screen. */
+try{boot();}
+catch(err){
+var m=document.getElementById('main');
+if(m)m.insertAdjacentHTML('afterbegin',
+'<div class="card w failure" role="alert" data-od-id="load-failure">'+
+'<p class="eyebrow">Dashboard could not load</p>'+
+'<h2>The figures did not render</h2>'+
+'<p class="sub">The source data was rejected while building this page, so nothing shown '+
+'below is reliable. Rebuild the dashboard from the current monthly file rather than '+
+'reading a partial view.</p>'+
+'<p class="note"><b>Technical detail</b><br>'+esc((err&&err.message)||err)+'</p></div>');
+}
+
+/* ---- premium: print, copy summary, staleness, keyboard + swipe nav ---- */
+(function(){
+var bar=document.createElement('div');bar.className='pbar';
+bar.innerHTML='<button class="pbtn" id="btnPrint" title="Print or save as PDF">Print report</button>'+
+'<button class="pbtn" id="btnCopy" title="Copy this month summary">Copy summary</button>'+
+'<span class="pstale" id="staleBadge"></span>';
+var lead=document.getElementById('lead');
+if(lead&&lead.parentNode)lead.parentNode.insertBefore(bar,lead.nextSibling);
+document.getElementById('btnPrint').addEventListener('click',function(){window.print();});
+document.getElementById('btnCopy').addEventListener('click',function(){
+var M=D.months[(CUR||D.el)-1];var p=M.target>0?M.rev/M.target:0;
+var t=M.name+' 2026 - Kulai\nSales: '+fmt(M.rev)+' ('+M.n+' sales)\nTarget: '+fmt(M.target)+' ('+pct(p)+')\nAs of '+D.as_of;
+(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){
+var b=document.getElementById('btnCopy');b.textContent='Copied';setTimeout(function(){b.textContent='Copy summary';},1600);
+}).catch(function(){});});
+var age=Math.floor((new Date()-new Date(D.as_of))/86400000);
+var sb=document.getElementById('staleBadge');
+if(age>7){sb.textContent='Data is '+age+' days old - export a fresh file';sb.className='pstale warn';}
+else{sb.textContent='Data to '+D.as_of;}
+document.addEventListener('keydown',function(e){
+if(e.key==='ArrowLeft'&&CUR>1)render(CUR-1);
+if(e.key==='ArrowRight'&&CUR<D.el)render(CUR+1);});
+var tx=null;
+document.addEventListener('touchstart',function(e){tx=e.touches[0].clientX;},{passive:true});
+document.addEventListener('touchend',function(e){
+if(tx===null)return;var dx=e.changedTouches[0].clientX-tx;tx=null;
+if(Math.abs(dx)<70)return;
+if(dx>0&&CUR>1)render(CUR-1);
+if(dx<0&&CUR<D.el)render(CUR+1);},{passive:true});
+
+var tip=document.createElement('div');tip.id='livetip';document.body.appendChild(tip);
+function showTip(t,x,y){tip.textContent=t;tip.style.display='block';
+var r=tip.getBoundingClientRect();
+var lx=Math.min(Math.max(8,x+14),window.innerWidth-r.width-8);
+var ly=y-r.height-12;if(ly<8)ly=y+18;
+tip.style.left=lx+'px';tip.style.top=ly+'px';}
+function hideTip(){tip.style.display='none';}
+document.addEventListener('pointermove',function(e){
+var el=e.target.closest?e.target.closest('[data-tip]'):null;
+if(el)showTip(el.getAttribute('data-tip'),e.clientX,e.clientY);else hideTip();},{passive:true});
+document.addEventListener('pointerdown',function(e){
+var el=e.target.closest?e.target.closest('[data-tip]'):null;
+if(el)showTip(el.getAttribute('data-tip'),e.clientX,e.clientY);},{passive:true});
+document.addEventListener('scroll',hideTip,{passive:true});
+})();
+</script>
+</body></html>
