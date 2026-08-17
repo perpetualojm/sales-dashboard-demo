@@ -385,11 +385,12 @@ function renderLead(mi){
       lead+='<div class="bullet"><i style="width:'+w.toFixed(1)+'%" class="'+(ach>=1?'done':'')+'"></i><u></u></div>'+
         '<div class="bmeta"><span>'+fmt(a)+L(' so far',' 已达成')+'</span><span>'+L('target ','目标 ')+fmt(t)+'</span></div>';}
     var hasInc=M.inc_pool>0;
-    cards='<div class="card clk" data-dk="month" role="button" tabindex="0"><div class="l">'+L('Incentive pool','奖励池')+'</div><div class="v">'+(hasInc?fmt(M.inc_pool):'&mdash;')+'</div>'+
+    var hasS=(M.sales&&M.sales.length>0);
+    cards='<div class="card'+(hasS?' clk" data-dk="month" role="button" tabindex="0':'')+'"><div class="l">'+L('Incentive pool','奖励池')+'</div><div class="v">'+(hasInc?fmt(M.inc_pool):'&mdash;')+'</div>'+
       '<div class="h">'+(hasInc?L('from your sales this month','来自您本月的销售'):L('not yet recorded for this month','本月尚未记录'))+'</div></div>'+
       '<div class="card"><div class="l">'+L('Incentive earned','已获奖励')+'</div><div class="v">'+(hasInc&&M.earned!=null?fmt(M.earned):'&mdash;')+'</div>'+
       '<div class="h">'+(hasInc?(ach!==null?L('at ','按 ')+pct(Math.max(.5,Math.min(ach,1)))+L(' payout factor (50% floor, 100% cap)',' 发放系数（下限50%，上限100%）'):L('50% floor applied','按50%下限发放')):L('appears once incentive is entered in the sales file','奖励录入销售文件后即显示'))+'</div></div>';
-    spoken=M.name+'. '+(t>0?(gap<=0?'Target achieved.':fmt(gap)+' to target.'):fmt(a)+' in sales.');
+    spoken=MN(M.name)+L('. ','。')+(t>0?(gap<=0?L('Target achieved.','目标达成。'):fmt(gap)+L(' to target.',' 距离目标。')):fmt(a)+L(' in sales.',' 销售额。'));
 
   }else{
     var a2=M.actual,blocks=M.blocks,nxt=M.to_next;
@@ -411,14 +412,16 @@ function renderLead(mi){
       return '<div class="d '+cls+'">'+(up?'▲':'▼')+' '+pct(Math.abs(d))+L(' vs ',' 对比 ')+MN(prev.name)+(partial?L(' (part month)','（部分月）'):'')+'</div>';
     }
     var cm=(M.comm_calc||0)+(M.ut_imm||0),pcm=prev?((prev.comm_calc||0)+(prev.ut_imm||0)):0;
-    cards='<div class="card clk'+(blocks>0?' good':'')+'" data-dk="month" role="button" tabindex="0"><div class="l">'+L('Net sales','净销售')+'</div><div class="v">'+fmt(a2)+'</div>'+
+    var hasS=(M.sales&&M.sales.length>0);
+    var hasCm=(M.sales||[]).some(function(x){return (x[5]||0)+(x[6]||0)>0;});
+    cards='<div class="card'+(blocks>0?' good':'')+(hasS?' clk':'')+'"'+(hasS?' data-dk="month" role="button" tabindex="0"':'')+'><div class="l">'+L('Net sales','净销售')+'</div><div class="v">'+fmt(a2)+'</div>'+
       '<div class="h">'+L(M.n+' sale'+(M.n===1?'':'s'),M.n+' 单')+(partial?L(' to ',' 截至 ')+AO_TXT:L(' this month',' · 本月'))+'</div>'+delta(a2,prev&&prev.actual)+'</div>'+
-      '<div class="card clk" data-dk="comm" role="button" tabindex="0"><div class="l">'+L('Commission — calculated','佣金 — 计算值')+'</div><div class="v">'+(cm>0?fmt(cm):'&mdash;')+'</div>'+
-      '<div class="h">'+(P.tier==='UT'?L('UT — immediate-case incentive; Bonanza paid separately','UT — 即需个案奖励；花红另计'):L('Net Licensing × 0.8 × your rate','净执照费 × 0.8 × 您的级别比率'))+((M.ut_imm||0)>0?L(' + immediate ',' + 即需个案 ')+fmt(M.ut_imm):'')+L(' · recorded: ',' · 记录值: ')+(M.inc_pool>0?fmt(M.inc_pool):L('none yet','暂无'))+'</div>'+
+      '<div class="card'+(hasCm?' clk" data-dk="comm" role="button" tabindex="0':'')+'"><div class="l">'+L('Commission — calculated','佣金 — 计算值')+'</div><div class="v">'+(cm>0?fmt(cm):'&mdash;')+'</div>'+
+      '<div class="h">'+(P.tier==='UT'?L('UT — immediate-case incentive; Bonanza paid separately','UT — 即需个案奖励；花红另计'):L('Net Licensing × 0.8 × your rate','净执照费 × 0.8 × 您的级别比率'))+((M.ut_imm||0)>0?L(' + immediate ',' + 即需个案 ')+fmt(M.ut_imm):'')+L(' · recorded: ',' · 记录值：')+(M.inc_pool>0?fmt(M.inc_pool):L('none yet','暂无'))+'</div>'+
       (cm>0&&pcm>0?delta(cm,pcm):'')+'</div>';
 
-    spoken=M.name+'. '+(blocks>0?fmt(M.bonanza)+' earned from '+blocks+' Bonanza blocks.':fmt(nxt)+' more in sales to the first Bonanza.')+
-      ' Net sales '+fmt(a2)+' from '+M.n+' sales.';
+    spoken=MN(M.name)+L('. ','。')+(blocks>0?fmt(M.bonanza)+L(' earned from '+blocks+' Bonanza blocks.',' — 已达成 '+blocks+' 个花红档。'):fmt(nxt)+L(' more in sales to the first Bonanza.',' 距首个花红。'))+
+      L(' Net sales ',' 净销售 ')+fmt(a2)+L(' from '+M.n+' sale'+(M.n===1?'':'s')+'.','，共 '+M.n+' 单。');
   }
 
   el('lead').innerHTML=lead;
@@ -545,27 +548,28 @@ function renderDaily(mi){
 
 /* ---------- year to date ---------- */
 function renderYTD(){
-  var tot=0,n=0,blocks=0,bon=0,cc=0,cr=0,hitm=0,best=null;
+  var tot=0,n=0,blocks=0,bon=0,cc=0,cr=0,ci=0,hitm=0,best=null;
   P.months.forEach(function(x){
     tot+=x.actual;n+=x.n;blocks+=x.blocks||0;bon+=x.bonanza||0;
-    cc+=(x.comm_calc||0)+(x.ut_imm||0);cr+=x.inc_pool||0;
+    cc+=(x.comm_calc||0)+(x.ut_imm||0);ci+=(x.ut_imm||0);cr+=x.inc_pool||0;
     if(P.kind==='staff'&&x.target>0&&x.actual>=x.target)hitm++;
     if(!best||x.actual>best.actual)best=x;
   });
-  var comm=(P.kind==='agent'?(cc>0?cc:cr):cr);
+  var isUT=(P.tier==='UT');
+  var comm=(P.kind==='agent'?(isUT?cr:(cc>0?cc:cr)):cr);
   var months=P.months.length;
   el('ytd').innerHTML=
     '<div class="stat"><div class="l">'+L('Net sales','净销售')+'</div><div class="v">'+fmt(tot)+'</div>'+
-      '<div class="h">'+L(n+' sales across '+months+' months',months+' 个月共 '+n+' 单')+'</div></div>'+
+      '<div class="h">'+L(n+' sale'+(n===1?'':'s')+' across '+months+' month'+(months===1?'':'s'),months+' 个月共 '+n+' 单')+'</div></div>'+
     (P.kind==='agent'
      ?'<div class="stat"><div class="l">'+L('Bonanza earned','已赚花红')+'</div><div class="v">'+(bon>0?fmt(bon):'—')+'</div>'+
-       '<div class="h">'+L(blocks+' block'+(blocks===1?'':'s')+' banked','已达成 '+blocks+' 个档')+'</div></div>'
+       '<div class="h">'+L(blocks+' block'+(blocks===1?'':'s')+' banked','已达成 '+blocks+' 个花红档')+'</div></div>'
      :'<div class="stat"><div class="l">'+L('Months on target','达标月份')+'</div><div class="v">'+(hitm>0?hitm:'—')+'</div>'+
        '<div class="h">'+L('of '+months+' months so far','共 '+months+' 个月')+'</div></div>')+
-    '<div class="stat"><div class="l">'+(P.kind==='agent'?(cc>0?L('Commission — calculated','佣金 — 计算值'):L('Commission — recorded','佣金 — 记录值')):L('Incentive pool','奖励池'))+'</div><div class="v">'+(comm>0?fmt(comm):'—')+'</div>'+
-      '<div class="h">'+(P.kind==='agent'?(cc>0?L('formula-based — payroll is authoritative','按公式计算 — 以工资单为准'):L('from the sales file — payroll is authoritative','来自销售文件 — 以工资单为准')):L('indicative total','累计（仅供参考）'))+'</div></div>'+
+    '<div class="stat"><div class="l">'+(P.kind==='agent'?((cc>0&&!isUT)?L('Commission — calculated','佣金 — 计算值'):L('Commission — recorded','佣金 — 记录值')):L('Incentive pool','奖励池'))+'</div><div class="v">'+(comm>0?fmt(comm):'—')+'</div>'+
+      '<div class="h">'+(P.kind==='agent'?((cc>0&&!isUT)?L('formula-based — payroll is authoritative','按公式计算 — 以工资单为准'):(L('from the sales file — payroll is authoritative','来自销售文件 — 以工资单为准')+(isUT&&ci>0?L(' · + immediate-case ',' · 另有即需个案 ')+fmt(ci):''))):L('indicative total','累计（仅供参考）'))+'</div></div>'+
     '<div class="stat"><div class="l">'+L('Best month','最佳月份')+'</div><div class="v">'+(best?MN(best.name):'—')+'</div>'+
-      '<div class="h">'+(best?fmt(best.actual)+L(' from '+best.n+' sales','，共 '+best.n+' 单'):'')+'</div></div>';
+      '<div class="h">'+(best?fmt(best.actual)+L(' from '+best.n+' sale'+(best.n===1?'':'s'),'，共 '+best.n+' 单'):'')+'</div></div>';
 }
 
 /* ---------- orchestration ---------- */
@@ -637,10 +641,13 @@ applyLang();
 
 function near(node,sel){return node&&node.closest?node.closest(sel):null;}
 el('chips').addEventListener('click',function(e){
+  if(sheetOpen)return;
   var b=near(e.target,'.chip');if(b)render(+b.dataset.m);});
 document.addEventListener('click',function(e){
+  if(sheetOpen)return;
   var b=near(e.target,'.hcol');if(b)render(+b.dataset.m);});
 document.addEventListener('keydown',function(e){
+  if(sheetOpen)return;
   if(e.key!=='Enter'&&e.key!==' ')return;
   var b=near(e.target,'.hcol');
   if(b){e.preventDefault();render(+b.dataset.m);}});
@@ -676,8 +683,11 @@ wrap.innerHTML='<div id="sheetback"></div><div id="sheet" role="dialog" aria-mod
 '<button id="sheetclose" aria-label="'+L('Close','关闭')+'">&#10005;</button>'+
 '<h3 id="sheeth"></h3><p class="ssub" id="sheetsub"></p><div id="sheetbody"></div></div>';
 document.body.appendChild(wrap);
-function closeSheet(){wrap.className='';sheetOpen=false;document.documentElement.style.overflow='';}
+var lastFocus=null;
+function closeSheet(){wrap.className='';sheetOpen=false;document.documentElement.style.overflow='';
+if(lastFocus&&lastFocus.focus){try{lastFocus.focus();}catch(e){}}lastFocus=null;}
 function openSheet(t,sub,html){
+lastFocus=document.activeElement;
 el('sheeth').textContent=t;el('sheetsub').textContent=sub;
 el('sheetbody').innerHTML=html;wrap.className='open';sheetOpen=true;
 document.documentElement.style.overflow='hidden';
@@ -706,12 +716,13 @@ openSheet(MN(M.name),L('Every sale this month','本月全部销售'),rowsHtml(S,
 else if(k==='comm'){var cr=S.filter(function(x){return (x[5]||0)+(x[6]||0)>0;});
 if(!cr.length)return;
 openSheet(L('Commission — calculated','佣金 — 计算值'),
-L('Per sale: Net Licensing × 0.8 × your rate','每单：净执照费 × 0.8 × 您的比率'),rowsHtml(cr,true,M));}
+P.tier==='UT'?L('Immediate-case incentive per sale','每单即需个案奖励'):L('Per sale: Net Licensing × 0.8 × your rate','每单：净执照费 × 0.8 × 您的比率'),rowsHtml(cr,true,M));}
 }
 document.addEventListener('click',function(e){
 var elm=e.target.closest?e.target.closest('[data-dk],[data-d]'):null;
 if(elm)handle(elm);});
 document.addEventListener('keydown',function(e){
+if(sheetOpen)return;
 if(e.key!=='Enter'&&e.key!==' ')return;
 var elm=e.target&&e.target.closest?e.target.closest('[data-dk],[data-d]'):null;
 if(elm){e.preventDefault();handle(elm);}});

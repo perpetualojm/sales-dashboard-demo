@@ -438,7 +438,7 @@ font:600 12px/1.45 'Segoe UI',sans-serif;padding:7px 11px;border-radius:7px;poin
 box-shadow:0 6px 18px rgba(0,0,0,.25);max-width:240px;white-space:nowrap}
 .dbar{cursor:pointer}
 .dbar:hover{filter:brightness(1.18)}
-.dscol{cursor:pointer}
+.dscol.clk{cursor:pointer}
 @media print{#livetip{display:none !important}}
 
 .histsvg{width:100%;height:auto;display:block}
@@ -609,7 +609,7 @@ var step=bw<9*k2?10:5;
 for(var d2=1;d2<=n;d2++){var x0=pl+bw*(d2-1);
 var v=M.days[d2]?M.days[d2][0]:0;
 if(v>0){var hh=Math.max(ih*v/mx,2);
-s+='<path class="dbar" data-dd="'+d2+'" data-tip="'+(ZH?MN(M.name)+d2+'日':d2+' '+M.name)+' — '+fmt(v)+' · '+L(M.days[d2][1]+' sale'+(M.days[d2][1]===1?'':'s'),M.days[d2][1]+' 单')+'" d="'+barPath(x0+bw*.21,pt+ih-hh,bw*.58,hh)+'"><title>'+
+s+='<path class="dbar" data-dd="'+d2+'" role="button" tabindex="0" aria-label="'+(ZH?MN(M.name)+d2+'日':d2+' '+M.name)+' — '+fmt(v)+'" data-tip="'+(ZH?MN(M.name)+d2+'日':d2+' '+M.name)+' — '+fmt(v)+' · '+L(M.days[d2][1]+' sale'+(M.days[d2][1]===1?'':'s'),M.days[d2][1]+' 单')+'" d="'+barPath(x0+bw*.21,pt+ih-hh,bw*.58,hh)+'"><title>'+
 (ZH?MN(M.name)+d2+'日':d2+' '+M.name)+': '+fmt(v)+' &#183; '+L(M.days[d2][1]+' sale'+(M.days[d2][1]===1?'':'s'),M.days[d2][1]+' 单')+'</title></path>';}
 if(d2===1||(d2%step===0&&d2<=n-2))
 s+='<text x="'+(x0+bw/2).toFixed(1)+'" y="'+(h-Math.round(10*k2))+'" class="xtick" font-size="'+
@@ -679,7 +679,7 @@ bars+='<div class="dscol'+(x.v>0?' clk':'')+'"'+(x.v>0?' data-dsm="'+x.m+'" data
 '<i style="height:'+h+'px"></i><span>'+x.d+'</span></div>';});
 return '<div class="dstrip" data-od-id="daily-strip">'+
 '<div class="dshead"><span class="lab">'+L('Daily sales &mdash; last 14 days','每日销售 — 最近14天')+'</span>'+
-(latest?'<span class="dslatest">'+L('Latest: ','最新: ')+'<b>'+(ZH?(SHORT[latest.m-1]+latest.d+'日'):(latest.d+' '+SHORT[latest.m-1]))+' &middot; '+fmt(latest.v)+'</b>'+
+(latest?'<span class="dslatest">'+L('Latest: ','最新：')+'<b>'+(ZH?(SHORT[latest.m-1]+latest.d+'日'):(latest.d+' '+SHORT[latest.m-1]))+' &middot; '+fmt(latest.v)+'</b>'+
 ' &nbsp;&#183;&nbsp; '+L('7-day total ','7天合计 ')+'<b>'+fmt(w7)+'</b></span>':'')+
 '</div><div class="dsbars">'+bars+'</div></div>';
 }
@@ -832,7 +832,7 @@ Object.keys(D.staff_tgt).forEach(function(nm){
 var t=D.staff_tgt[nm][mi-1],s=seen[nm]||{rev:0,n:0,mix:[]};
 var mixs=s.mix&&s.mix.length?s.mix.slice(0,2).map(function(x){
 return x[0]+' '+pct(x[1]/s.rev);}).join(' &#183; '):'';
-g+='<div class="br clk" data-dk="st" data-dv="'+esc(nm)+'" role="button" tabindex="0"><div class="nm">'+esc(nm)+(mixs?'<span class="s">'+mixs+'</span>':'')+'</div>'+
+g+='<div class="br'+(s.n>0?' clk':'')+'"'+(s.n>0?' data-dk="st" data-dv="'+esc(nm)+'" role="button" tabindex="0"':'')+'><div class="nm">'+esc(nm)+(mixs?'<span class="s">'+mixs+'</span>':'')+'</div>'+
 (t>0?bullet(s.rev,t):norail())+
 '<div class="val"><b>'+fmt(s.rev)+'</b>'+(t>0?(L('of ','目标 ')+fmt(t)+' &#183; '+pct(s.rev/t)):L('no target set','未设目标'))+
 '</div></div>';
@@ -901,7 +901,7 @@ g+='<div class="mix'+(v?' clk':'')+'"'+(v?' data-dk="cm" data-dv="'+p[0]+'" role
 g+='<div class="mix'+(cc.ut_imm?' clk':'')+'"'+(cc.ut_imm?' data-dk="cmu" role="button" tabindex="0"':'')+'><div class="t"><span class="k'+(cc.ut_imm?'':' dim')+'">'+L('UT immediate-case','UT 即需个案')+'</span>'+
 '<span class="s">'+fmt(cc.ut_imm)+' &#183; '+L('memo Jul–Dec 2026','备忘录 7–12月')+'</span></div>'+sbar(cc.ut_imm,cmx)+'</div>';
 g+='<p class="note"><b>'+L('Calculated total ','计算总额 ')+fmt(tot+cc.ut_imm)+'</b>'+
-L(' · recorded in file: ',' · 文件记录: ')+fmt(cc.recorded)+'. '+
+L(' · recorded in file: ',' · 文件记录：')+fmt(cc.recorded)+L('. ','。')+
 L('SDP/SSP zone split assumed per Product Summary choice-land zones.','SDP/SSP 按产品汇总表优选区域划分（假设）。')+'</p></div>';
 }
 
@@ -1050,8 +1050,12 @@ wrap.innerHTML='<div id="sheetback"></div><div id="sheet" role="dialog" aria-mod
 '<h3 id="sheeth"></h3><p class="ssub" id="sheetsub"></p><div id="sheetbody"></div></div>';
 document.body.appendChild(wrap);
 window.SHEET_OPEN=false;
-function closeSheet(){wrap.className='';window.SHEET_OPEN=false;document.documentElement.style.overflow='';}
+var SHEET_LASTFOCUS=null;
+function closeSheet(){wrap.className='';window.SHEET_OPEN=false;document.documentElement.style.overflow='';
+if(SHEET_LASTFOCUS&&SHEET_LASTFOCUS.focus){try{SHEET_LASTFOCUS.focus();}catch(e){}}SHEET_LASTFOCUS=null;}
 function openSheet(title,sub,html){
+SHEET_LASTFOCUS=document.activeElement;
+var lt=document.getElementById('livetip');if(lt)lt.style.display='none';
 document.getElementById('sheeth').textContent=title;
 document.getElementById('sheetsub').textContent=sub;
 document.getElementById('sheetbody').innerHTML=html;
@@ -1095,7 +1099,7 @@ else if(k==='t'){rows=S.filter(function(s){return s[3]===v;});t=TIER[v]||v;sub=L
 else if(k==='r'){rows=S.filter(function(s){return s[9]===v;});t=v;sub=L('Arrived via this route in ','此来源成交 — ')+MN(M.name);}
 else if(k==='wd'){var wi=+v;
 rows=S.filter(function(s){return ((new Date(YR,M.m-1,s[0]).getDay())+6)%7===wi;});
-t=WD(['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][wi]);sub=L('Sales on this weekday in ','该星期的销售 — ')+MN(M.name);}
+t=WD(['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][wi]);sub=L('Sales on this weekday in ','每逢此日的销售 — ')+MN(M.name);}
 else if(k==='cm'){rows=S.filter(function(s){return s[3]===v&&(s[8]||0)>0;});wc=true;
 t=(TIER[v]||v)+' — '+L('commission','佣金');sub=L('Per sale: Net Licensing × 0.8 × rate','每单：净执照费 × 0.8 × 比率');}
 else if(k==='cmu'){rows=S.filter(function(s){return (s[10]||0)>0;});wc=true;
@@ -1106,6 +1110,7 @@ document.addEventListener('click',function(e){
 var el=e.target.closest?e.target.closest('[data-dk],[data-dd],[data-mn],[data-dsm]'):null;
 if(el)handle(el);});
 document.addEventListener('keydown',function(e){
+if(window.SHEET_OPEN)return;
 if(e.key!=='Enter'&&e.key!==' ')return;
 var el=e.target&&e.target.closest?e.target.closest('[data-dk],[data-dd],[data-mn],[data-dsm]'):null;
 if(el){e.preventDefault();handle(el);}});
