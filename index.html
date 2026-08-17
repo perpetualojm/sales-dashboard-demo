@@ -6,7 +6,7 @@
 <title>Sales Dashboard DEMO — fictitious data</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Archivo:wght@400..700&family=Noto+Sans+SC:wght@400..700&family=Noto+Serif+SC:wght@500..700&display=swap" rel="stylesheet">
 <style>
 :root{
 --forest:#263f36;--forest-deep:#172b25;--sage:#789184;
@@ -19,8 +19,8 @@
 --crit-bg:#f5dfdb;--crit-fg:#934438;
 --off-bg:#e8e8e3;--off-fg:#68716c;
 --shadow:0 7px 22px rgba(47,58,52,.055);
---fd:'Newsreader',Georgia,'Times New Roman',serif;
---fu:'Public Sans','Segoe UI',system-ui,-apple-system,sans-serif;
+--fd:'Fraunces','Noto Serif SC',Georgia,'Times New Roman',serif;
+--fu:'Archivo','Noto Sans SC','Segoe UI',system-ui,-apple-system,sans-serif;
 --r:16px;--tick:var(--muted)}
 
 /* Type scale — eight steps on a ~1.25 ratio. Every font-size in this sheet is
@@ -443,6 +443,7 @@ box-shadow:0 6px 18px rgba(0,0,0,.25);max-width:240px;white-space:nowrap}
 
 .histsvg{width:100%;height:auto;display:block}
 .mlab{font:600 10px var(--fu);fill:var(--tick)}
+.num,.n,.val,.amt{font-variant-numeric:tabular-nums lining-nums}
 .mlab.curm{fill:var(--ink)}
 .baseline{stroke:var(--line);stroke-width:2}
 
@@ -476,6 +477,12 @@ padding:9px 0;border-top:1px solid var(--line)}
 .stot{margin-top:12px;padding-top:10px;border-top:2px solid var(--ink);display:flex;
 justify-content:space-between;gap:12px;font:600 13.5px/1.4 var(--fu);color:var(--ink)}
 @media print{#sheetwrap{display:none !important}}
+
+/* ---------- typography: print-grade figures ---------- */
+h1,h2,.lead-fig .v,.big{font-optical-sizing:auto}
+.lead-fig .v,.keyfig .n,.big,.val,.amt,td.r,.pc,.ytd b,.dslatest b,.sv,.stot,.bmeta,.glab{
+font-variant-numeric:tabular-nums lining-nums}
+.eyebrow,.switch-lab,.tag,.pill{letter-spacing:.1em}
 </style>
 </head>
 <body>

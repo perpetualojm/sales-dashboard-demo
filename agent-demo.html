@@ -7,7 +7,7 @@
 <title>Agent Dashboard DEMO — fictitious data</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=Public+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Archivo:wght@400..700&family=Noto+Sans+SC:wght@400..700&family=Noto+Serif+SC:wght@500..700&display=swap">
 <style>
 :root{
   /* Perpetual brand tokens */
@@ -21,8 +21,8 @@
   --grid:#e9e2d4; --track:#e9e2d4;
   --hero-a:#2c473d; --hero-b:#263f36; --hero-c:#172b25;
   --ring:#d9b98a;
-  --fd:'Newsreader',Georgia,'Times New Roman',serif;
-  --fu:'Public Sans','Segoe UI',system-ui,sans-serif;
+  --fd:'Fraunces','Noto Serif SC',Georgia,'Times New Roman',serif;
+  --fu:'Archivo','Noto Sans SC','Segoe UI',system-ui,sans-serif;
 }
 @media (prefers-color-scheme:dark){:root{
   --ivory:#141f1b; --paper:#1c2b26; --line:#31463e; --ink:#eaeeeb;
@@ -263,6 +263,9 @@ justify-content:space-between;gap:12px;font:600 13.5px/1.4 var(--fu);color:var(-
   .lead{padding:17px 16px}
   .ybody{height:150px}
 }
+/* typography: print-grade figures */
+h1,h2,.gap{font-optical-sizing:auto}
+.gap,.card .v,.stat .v,.bmeta,.sv,.stot,.glab,.xcol span{font-variant-numeric:tabular-nums lining-nums}
 @media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
 </style>
 </head>
