@@ -192,9 +192,42 @@ body{margin:0;background:var(--ivory);color:var(--ink);
 .foot{margin-top:32px;padding-top:14px;border-top:1px solid var(--line);
   font:400 12px/1.65 var(--fu);color:var(--muted)}
 
+/* ---------- drill-down detail sheet ---------- */
+.clk{cursor:pointer}
+.clk:focus-visible{outline:2px solid var(--bronzed);outline-offset:2px}
+.card.clk .l:after{content:' \203A';color:var(--bronzed);opacity:.75}
+.card.clk:hover .l{color:var(--bronzed)}
+#sheetwrap{position:fixed;inset:0;z-index:80;display:none}
+#sheetwrap.open{display:block}
+#sheetback{position:absolute;inset:0;background:rgba(16,26,22,.5)}
+#sheet{position:absolute;left:0;right:0;bottom:0;max-height:76vh;overflow:auto;
+background:var(--paper);border-radius:18px 18px 0 0;box-shadow:0 -12px 40px rgba(0,0,0,.25);
+padding:18px 18px 26px}
+@media (min-width:700px){#sheet{left:50%;right:auto;bottom:auto;top:50%;transform:translate(-50%,-50%);
+width:min(520px,92vw);max-height:80vh;border-radius:18px;padding:22px 24px 28px}}
+#sheet h3{font:600 18px/1.3 var(--fd);letter-spacing:-.01em;margin:0 44px 2px 0;color:var(--ink)}
+#sheet .ssub{font:400 12.5px/1.5 var(--fu);color:var(--muted);margin:0 0 12px}
+#sheetclose{position:absolute;top:12px;right:14px;width:34px;height:34px;border:0;border-radius:50%;
+background:var(--line);color:var(--ink);font:600 15px/1 var(--fu);cursor:pointer}
+#sheetclose:focus-visible{outline:2px solid var(--bronzed);outline-offset:2px}
+.srow{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+padding:9px 0;border-top:1px solid var(--line)}
+#sheetbody .srow:first-child{border-top:0}
+.srow .sk{font:500 13px/1.45 var(--fu);color:var(--ink);min-width:0}
+.srow .sk .m{display:block;font-weight:400;font-size:11.5px;color:var(--muted)}
+.srow .sv{font:600 13.5px/1.4 var(--fu);color:var(--ink);white-space:nowrap;text-align:right}
+.srow .sv .m{display:block;font-weight:500;font-size:11.5px;color:var(--muted)}
+.stot{margin-top:12px;padding-top:10px;border-top:2px solid var(--ink);display:flex;
+justify-content:space-between;gap:12px;font:600 13.5px/1.4 var(--fu);color:var(--ink)}
+@media print{#sheetwrap{display:none !important}}
 .brow{display:flex;align-items:center}
-#langbtn{margin-left:auto;flex:0 0 auto;font:600 11px/1 var(--fu);letter-spacing:.06em;color:inherit;
+#langbtn{position:relative;margin-left:auto;flex:0 0 auto;font:600 11px/1 var(--fu);letter-spacing:.06em;color:inherit;
   background:transparent;border:1px solid currentColor;border-radius:999px;padding:6px 12px;cursor:pointer;opacity:.7}
+#langbtn:after{content:'';position:absolute;inset:-10px}
+#gate #glang{display:block;margin:8px auto 0;background:none;border:0;color:var(--muted);
+  font:600 12.5px/1 var(--fu);letter-spacing:.04em;cursor:pointer;min-height:44px;min-width:44px;padding:0 14px}
+#gate #glang:hover{color:var(--ink)}
+#gate #glang:focus-visible{outline:2px solid var(--bronzed);outline-offset:2px}
 #langbtn:hover,#langbtn:focus-visible{opacity:1}
 /* ---------- gate ---------- */
 #gate{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px;
@@ -245,6 +278,7 @@ body{margin:0;background:var(--ivory);color:var(--ink);
     <input id="pinbox" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" autofocus>
     <div class="err" id="pinerr" role="alert"></div>
     <button id="pingo">Open my dashboard</button>
+    <button id="glang" type="button">中文</button>
   </div>
 </div>
 
@@ -303,7 +337,7 @@ body{margin:0;background:var(--ivory);color:var(--ink);
 <div id="livetip" role="tooltip" aria-hidden="true"></div>
 
 <script>
-var P={"kind":"agent","name":"Golden Lotus Memorial (BD)","el":8,"months":[{"m":1,"name":"January","dim":31,"actual":42001.0,"n":4,"days":{"4":[2028.0,1],"7":[14555.0,1],"8":[23228.0,1],"19":[2190.0,1]},"inc_pool":4620.0,"target":null,"blocks":0,"bonanza":0.0,"carry":42001.0,"to_next":17999.0,"comm_calc":5131.952,"ut_imm":0.0},{"m":2,"name":"February","dim":28,"actual":8000.0,"n":6,"days":{"10":[3174.0,2],"19":[1443.0,1],"23":[2965.0,1],"16":[228.0,1],"15":[190.0,1]},"inc_pool":880.0,"target":null,"blocks":0,"bonanza":0.0,"carry":8000.0,"to_next":52000.0,"comm_calc":741.6800000000002,"ut_imm":0.0},{"m":3,"name":"March","dim":31,"actual":55000.0,"n":4,"days":{"19":[16487.0,1],"24":[21958.0,1],"4":[5246.0,1],"5":[11309.0,1]},"inc_pool":4806.0,"target":null,"blocks":0,"bonanza":0.0,"carry":55000.0,"to_next":5000.0,"comm_calc":6247.768,"ut_imm":0.0},{"m":4,"name":"April","dim":30,"actual":131000.0,"n":5,"days":{"11":[10168.0,1],"26":[62940.0,1],"16":[30263.0,1],"23":[22653.0,1],"13":[4976.0,1]},"inc_pool":13862.0,"target":null,"blocks":2,"bonanza":7776.0,"carry":11000.0,"to_next":49000.0,"comm_calc":15284.720000000001,"ut_imm":0.0},{"m":5,"name":"May","dim":31,"actual":27000.0,"n":2,"days":{"20":[25398.0,1],"10":[1602.0,1]},"inc_pool":2970.0,"target":null,"blocks":0,"bonanza":0.0,"carry":27000.0,"to_next":33000.0,"comm_calc":3292.3920000000003,"ut_imm":0.0},{"m":6,"name":"June","dim":30,"actual":64000.0,"n":8,"days":{"9":[5157.0,1],"13":[19864.0,1],"5":[20997.0,2],"27":[6416.0,1],"11":[3337.0,1],"20":[766.0,1],"29":[7463.0,1]},"inc_pool":3100.0,"target":null,"blocks":1,"bonanza":3888.0,"carry":4000.0,"to_next":56000.0,"comm_calc":6725.112,"ut_imm":0.0},{"m":7,"name":"July","dim":31,"actual":152000.0,"n":8,"days":{"2":[9462.0,1],"12":[36542.0,2],"5":[12563.0,2],"4":[8932.0,1],"23":[28913.0,1],"10":[55588.0,1]},"inc_pool":9622.0,"target":null,"blocks":2,"bonanza":7776.0,"carry":32000.0,"to_next":28000.0,"comm_calc":18821.12,"ut_imm":0.0},{"m":8,"name":"August","dim":31,"actual":38000.0,"n":4,"days":{"9":[13516.0,1],"13":[6183.0,1],"12":[14815.0,1],"14":[3486.0,1]},"inc_pool":0.0,"target":null,"blocks":0,"bonanza":0.0,"carry":38000.0,"to_next":22000.0,"comm_calc":4242.52,"ut_imm":0.0}],"tier":"BD","as_of":"2026-08-14","block":60000.0,"pay":3888.0};var PIN='1234';
+var P={"kind":"agent","name":"Golden Lotus Memorial (BD)","el":8,"months":[{"m":1,"name":"January","dim":31,"actual":42001.0,"n":4,"days":{"4":[2028.0,1],"7":[14555.0,1],"8":[23228.0,1],"19":[2190.0,1]},"inc_pool":4620.0,"sales":[[4,"Urn","DOUBLE","HDL(K)",2028.0,251.4,0.0],[7,"Urn","DOUBLE","A1",14555.0,1804.8,0.0],[8,"Urn","DOUBLE","A1",23228.0,2880.2,0.0],[19,"Land","SDP","8B",2190.0,195.55,0.0]],"target":null,"blocks":0,"bonanza":0.0,"carry":42001.0,"to_next":17999.0,"comm_calc":5131.952,"ut_imm":0.0},{"m":2,"name":"February","dim":28,"actual":8000.0,"n":6,"days":{"10":[3174.0,2],"19":[1443.0,1],"23":[2965.0,1],"16":[228.0,1],"15":[190.0,1]},"inc_pool":880.0,"sales":[[10,"Urn","DOUBLE","QLG(B)",373.0,46.2,0.0],[10,"Land","SDP","8B",2801.0,250.13,0.0],[15,"Urn","DOUBLE","A1",190.0,23.6,0.0],[16,"Urn","DOUBLE","A1",228.0,28.2,0.0],[19,"Land","SDP","10C",1443.0,128.88,0.0],[23,"Land","SDP","8B",2965.0,264.67,0.0]],"target":null,"blocks":0,"bonanza":0.0,"carry":8000.0,"to_next":52000.0,"comm_calc":741.6800000000002,"ut_imm":0.0},{"m":3,"name":"March","dim":31,"actual":55000.0,"n":4,"days":{"19":[16487.0,1],"24":[21958.0,1],"4":[5246.0,1],"5":[11309.0,1]},"inc_pool":4806.0,"sales":[[4,"Urn","DOUBLE","HDL(K)",5246.0,650.6,0.0],[5,"Urn","DOUBLE","A1",11309.0,1402.4,0.0],[19,"Land","SDP","10C",16487.0,1471.97,0.0],[24,"Urn","DOUBLE","QLG(B)",21958.0,2722.8,0.0]],"target":null,"blocks":0,"bonanza":0.0,"carry":55000.0,"to_next":5000.0,"comm_calc":6247.768,"ut_imm":0.0},{"m":4,"name":"April","dim":30,"actual":131000.0,"n":5,"days":{"11":[10168.0,1],"26":[62940.0,1],"16":[30263.0,1],"23":[22653.0,1],"13":[4976.0,1]},"inc_pool":13862.0,"sales":[[11,"Urn","DOUBLE","QLG(B)",10168.0,1260.8,0.0],[13,"Land","SDP","10C",4976.0,444.24,0.0],[16,"Urn","DOUBLE","HDL(K)",30263.0,3752.6,0.0],[23,"Land","SDP","10C",22653.0,2022.48,0.0],[26,"Urn","DOUBLE","HDL(K)",62940.0,7804.6,0.0]],"target":null,"blocks":2,"bonanza":7776.0,"carry":11000.0,"to_next":49000.0,"comm_calc":15284.720000000001,"ut_imm":0.0},{"m":5,"name":"May","dim":31,"actual":27000.0,"n":2,"days":{"20":[25398.0,1],"10":[1602.0,1]},"inc_pool":2970.0,"sales":[[10,"Land","SDP","8B",1602.0,142.99,0.0],[20,"Urn","DOUBLE","HDL(K)",25398.0,3149.4,0.0]],"target":null,"blocks":0,"bonanza":0.0,"carry":27000.0,"to_next":33000.0,"comm_calc":3292.3920000000003,"ut_imm":0.0},{"m":6,"name":"June","dim":30,"actual":64000.0,"n":8,"days":{"9":[5157.0,1],"13":[19864.0,1],"5":[20997.0,2],"27":[6416.0,1],"11":[3337.0,1],"20":[766.0,1],"29":[7463.0,1]},"inc_pool":3100.0,"sales":[[5,"Land","SDP","8B",3727.0,332.78,0.0],[5,"Land","SDP","10C",17270.0,1541.81,0.0],[9,"Urn","DOUBLE","A1",5157.0,639.4,0.0],[11,"Urn","DOUBLE","QLG(B)",3337.0,413.8,0.0],[13,"Urn","DOUBLE","HDL(K)",19864.0,2463.2,0.0],[20,"Urn","DOUBLE","QLG(B)",766.0,95.0,0.0],[27,"Land","SDP","10C",6416.0,572.83,0.0],[29,"Land","SDP","10C",7463.0,666.29,0.0]],"target":null,"blocks":1,"bonanza":3888.0,"carry":4000.0,"to_next":56000.0,"comm_calc":6725.112,"ut_imm":0.0},{"m":7,"name":"July","dim":31,"actual":152000.0,"n":8,"days":{"2":[9462.0,1],"12":[36542.0,2],"5":[12563.0,2],"4":[8932.0,1],"23":[28913.0,1],"10":[55588.0,1]},"inc_pool":9622.0,"sales":[[2,"Urn","DOUBLE","QLG(B)",9462.0,1173.2,0.0],[4,"Urn","DOUBLE","A1",8932.0,1107.6,0.0],[5,"Urn","DOUBLE","A1",5501.0,682.2,0.0],[5,"Urn","DOUBLE","A1",7062.0,875.6,0.0],[10,"Urn","DOUBLE","HDL(K)",55588.0,6893.0,0.0],[12,"Land","SDP","8B",775.0,69.12,0.0],[12,"Urn","DOUBLE","QLG(B)",35767.0,4435.2,0.0],[23,"Urn","DOUBLE","HDL(K)",28913.0,3585.2,0.0]],"target":null,"blocks":2,"bonanza":7776.0,"carry":32000.0,"to_next":28000.0,"comm_calc":18821.12,"ut_imm":0.0},{"m":8,"name":"August","dim":31,"actual":38000.0,"n":4,"days":{"9":[13516.0,1],"13":[6183.0,1],"12":[14815.0,1],"14":[3486.0,1]},"inc_pool":0.0,"sales":[[9,"Land","SDP","10C",13516.0,1206.72,0.0],[12,"Urn","DOUBLE","HDL(K)",14815.0,1837.0,0.0],[13,"Urn","DOUBLE","HDL(K)",6183.0,766.6,0.0],[14,"Urn","DOUBLE","A1",3486.0,432.2,0.0]],"target":null,"blocks":0,"bonanza":0.0,"carry":38000.0,"to_next":22000.0,"comm_calc":4242.52,"ut_imm":0.0}],"tier":"BD","as_of":"2026-08-14","block":60000.0,"pay":3888.0};var PIN='1234';
 var ZH=false;try{ZH=localStorage.getItem('pmp.lang')==='zh';}catch(e){}
 function L(en,zh){return ZH?zh:en;}
 var SHORT_EN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -348,7 +382,7 @@ function renderLead(mi){
       lead+='<div class="bullet"><i style="width:'+w.toFixed(1)+'%" class="'+(ach>=1?'done':'')+'"></i><u></u></div>'+
         '<div class="bmeta"><span>'+fmt(a)+L(' so far',' 已达成')+'</span><span>'+L('target ','目标 ')+fmt(t)+'</span></div>';}
     var hasInc=M.inc_pool>0;
-    cards='<div class="card"><div class="l">'+L('Incentive pool','奖励池')+'</div><div class="v">'+(hasInc?fmt(M.inc_pool):'&mdash;')+'</div>'+
+    cards='<div class="card clk" data-dk="month" role="button" tabindex="0"><div class="l">'+L('Incentive pool','奖励池')+'</div><div class="v">'+(hasInc?fmt(M.inc_pool):'&mdash;')+'</div>'+
       '<div class="h">'+(hasInc?L('from your sales this month','来自您本月的销售'):L('not yet recorded for this month','本月尚未记录'))+'</div></div>'+
       '<div class="card"><div class="l">'+L('Incentive earned','已获奖励')+'</div><div class="v">'+(hasInc&&M.earned!=null?fmt(M.earned):'&mdash;')+'</div>'+
       '<div class="h">'+(hasInc?(ach!==null?L('at ','按 ')+pct(Math.max(.5,Math.min(ach,1)))+L(' payout factor (50% floor, 100% cap)',' 发放系数（下限50%，上限100%）'):L('50% floor applied','按50%下限发放')):L('appears once incentive is entered in the sales file','奖励录入销售文件后即显示'))+'</div></div>';
@@ -358,8 +392,8 @@ function renderLead(mi){
     var a2=M.actual,blocks=M.blocks,nxt=M.to_next;
     lead='<p class="per">'+esc(MN(M.name))+L(' — Bonanza progress',' — 花红进度')+'</p>'+
       (blocks>0
-        ?'<div class="gap done">'+fmt(M.bonanza)+L(' earned',' 已赚取')+'</div><p class="say">'+L(blocks+' Bonanza block'+(blocks>1?'s':'')+' banked. ','已达成 '+blocks+' 个花红档。')+'<b>'+fmt(nxt)+'</b>'+L(' more in sales unlocks the next ',' 更多销售即解锁下一个 ')+'<b>'+fmt(P.pay)+'</b>'+L('.','。')+'</p>'
-        :'<div class="gap">'+fmt(nxt)+'</div><p class="say">'+L('more in sales to your first ','更多销售即获首个 ')+'<b>'+fmt(P.pay)+'</b>'+L(' Bonanza this month — you have ',' 花红 — 您目前有 ')+'<b>'+fmt(a2)+'</b>'+L(' from '+M.n+' sale'+(M.n===1?'':'s')+'.','，共 '+M.n+' 单。')+'</p>');
+        ?'<div class="gap done">'+fmt(M.bonanza)+L(' earned',' 已赚取')+'</div><p class="say">'+L(blocks+' Bonanza block'+(blocks>1?'s':'')+' banked. ','已达成 '+blocks+' 个花红档。还差 ')+'<b>'+fmt(nxt)+'</b>'+L(' more in sales unlocks the next ',' 即可解锁下一个 ')+'<b>'+fmt(P.pay)+'</b>'+L('.','。')+'</p>'
+        :'<div class="gap">'+fmt(nxt)+'</div><p class="say">'+L('more in sales to your first ','再售出此金额，即可获得本月首个 ')+'<b>'+fmt(P.pay)+'</b>'+L(' Bonanza this month — you have ',' 花红 — 目前销售额 ')+'<b>'+fmt(a2)+'</b>'+L(' from '+M.n+' sale'+(M.n===1?'':'s')+'.','，共 '+M.n+' 单。')+'</p>');
     var w2=Math.min(1,M.carry/P.block)*100;
     lead+='<div class="bullet"><i style="width:'+w2.toFixed(1)+'%"></i><u></u></div>'+
       '<div class="bmeta"><span>'+fmt(M.carry)+L(' toward the next block',' · 距下一档进度')+'</span><span>'+fmt(P.block)+'</span></div>';
@@ -374,9 +408,9 @@ function renderLead(mi){
       return '<div class="d '+cls+'">'+(up?'▲':'▼')+' '+pct(Math.abs(d))+L(' vs ',' 对比 ')+MN(prev.name)+(partial?L(' (part month)','（部分月）'):'')+'</div>';
     }
     var cm=(M.comm_calc||0)+(M.ut_imm||0),pcm=prev?((prev.comm_calc||0)+(prev.ut_imm||0)):0;
-    cards='<div class="card'+(blocks>0?' good':'')+'"><div class="l">'+L('Net sales','净销售')+'</div><div class="v">'+fmt(a2)+'</div>'+
+    cards='<div class="card clk'+(blocks>0?' good':'')+'" data-dk="month" role="button" tabindex="0"><div class="l">'+L('Net sales','净销售')+'</div><div class="v">'+fmt(a2)+'</div>'+
       '<div class="h">'+L(M.n+' sale'+(M.n===1?'':'s'),M.n+' 单')+(partial?L(' to ',' 截至 ')+AO_TXT:L(' this month',' · 本月'))+'</div>'+delta(a2,prev&&prev.actual)+'</div>'+
-      '<div class="card"><div class="l">'+L('Commission — calculated','佣金 — 计算值')+'</div><div class="v">'+(cm>0?fmt(cm):'&mdash;')+'</div>'+
+      '<div class="card clk" data-dk="comm" role="button" tabindex="0"><div class="l">'+L('Commission — calculated','佣金 — 计算值')+'</div><div class="v">'+(cm>0?fmt(cm):'&mdash;')+'</div>'+
       '<div class="h">'+(P.tier==='UT'?L('UT — immediate-case incentive; Bonanza paid separately','UT — 即需个案奖励；花红另计'):L('Net Licensing × 0.8 × your rate','净执照费 × 0.8 × 您的级别比率'))+((M.ut_imm||0)>0?L(' + immediate ',' + 即需个案 ')+fmt(M.ut_imm):'')+L(' · recorded: ',' · 记录值: ')+(M.inc_pool>0?fmt(M.inc_pool):L('none yet','暂无'))+'</div>'+
       (cm>0&&pcm>0?delta(cm,pcm):'')+'</div>';
 
@@ -429,15 +463,20 @@ function renderLead(mi){
 
 /* ---------- year chart, scaled to whole Bonanza blocks ---------- */
 function renderYear(mi){
-  var mx=0;P.months.forEach(function(x){mx=Math.max(mx,x.actual);});
-  var lines=Math.max(1,Math.ceil(mx/P.block));
-  var scale=lines*P.block;
+  var mx=0;P.months.forEach(function(x){mx=Math.max(mx,x.actual,(P.kind==='staff'&&x.target)||0);});
+  var unit=P.block;
+  if(P.kind==='staff'){
+    var raw=Math.max(1,mx)/4,pw=Math.pow(10,Math.floor(Math.log(raw)/Math.LN10)),cand=[1,2,2.5,5,10];
+    unit=10*pw;for(var ci=0;ci<cand.length;ci++){if(cand[ci]*pw>=raw){unit=cand[ci]*pw;break;}}
+  }
+  var lines=Math.max(1,Math.ceil(mx/unit));
+  var scale=lines*unit;
 
   var g='';
   for(var i=1;i<=lines;i++){
-    var y=(1-(i*P.block)/scale)*100;
+    var y=(1-(i*unit)/scale)*100;
     g+='<div class="gline" style="top:'+y.toFixed(2)+'%"></div>'+
-       '<div class="glab" style="top:'+y.toFixed(2)+'%">'+short(i*P.block)+'</div>';
+       '<div class="glab" style="top:'+y.toFixed(2)+'%">'+short(i*unit)+'</div>';
   }
   var bars='',ax='';
   P.months.forEach(function(x){
@@ -472,7 +511,7 @@ function renderDaily(mi){
     var v=M.days[d]?M.days[d][0]:0;
     var h=v>0?Math.max(6,(v/dmx)*100):0;
     var tip=v>0?((ZH?(MN(M.name)+d+'日'):(d+' '+M.name))+' — '+fmt(v)+' · '+L(M.days[d][1]+' sale'+(M.days[d][1]===1?'':'s'),M.days[d][1]+' 单')):'';
-    db+='<div class="dcol"'+(v>0?' data-tip="'+esc(tip)+'" aria-label="'+esc(tip)+'"':'')+'>'+
+    db+='<div class="dcol'+(v>0?' clk':'')+'"'+(v>0?' data-d="'+d+'" data-tip="'+esc(tip)+'" aria-label="'+esc(tip)+'" role="button" tabindex="0"':'')+'>'+
         (v>0?'<i style="height:'+h.toFixed(2)+'%"></i>':'')+'</div>';
   }
   if(partial&&AO_D<M.dim){
@@ -503,19 +542,25 @@ function renderDaily(mi){
 
 /* ---------- year to date ---------- */
 function renderYTD(){
-  var tot=0,n=0,blocks=0,bon=0,comm=0,best=null;
+  var tot=0,n=0,blocks=0,bon=0,cc=0,cr=0,hitm=0,best=null;
   P.months.forEach(function(x){
-    tot+=x.actual;n+=x.n;blocks+=x.blocks||0;bon+=x.bonanza||0;comm+=(P.kind==='agent'?((x.comm_calc||0)+(x.ut_imm||0)):(x.inc_pool||0));
+    tot+=x.actual;n+=x.n;blocks+=x.blocks||0;bon+=x.bonanza||0;
+    cc+=(x.comm_calc||0)+(x.ut_imm||0);cr+=x.inc_pool||0;
+    if(P.kind==='staff'&&x.target>0&&x.actual>=x.target)hitm++;
     if(!best||x.actual>best.actual)best=x;
   });
+  var comm=(P.kind==='agent'?(cc>0?cc:cr):cr);
   var months=P.months.length;
   el('ytd').innerHTML=
     '<div class="stat"><div class="l">'+L('Net sales','净销售')+'</div><div class="v">'+fmt(tot)+'</div>'+
       '<div class="h">'+L(n+' sales across '+months+' months',months+' 个月共 '+n+' 单')+'</div></div>'+
-    '<div class="stat"><div class="l">'+L('Bonanza earned','已赚花红')+'</div><div class="v">'+(bon>0?fmt(bon):'—')+'</div>'+
-      '<div class="h">'+L(blocks+' block'+(blocks===1?'':'s')+' banked','已达成 '+blocks+' 个档')+'</div></div>'+
-    '<div class="stat"><div class="l">'+(P.kind==='agent'?L('Commission — calculated','佣金 — 计算值'):L('Incentive pool','奖励池'))+'</div><div class="v">'+(comm>0?fmt(comm):'—')+'</div>'+
-      '<div class="h">'+(P.kind==='agent'?L('formula-based — payroll is authoritative','按公式计算 — 以工资单为准'):L('indicative total','累计（仅供参考）'))+'</div></div>'+
+    (P.kind==='agent'
+     ?'<div class="stat"><div class="l">'+L('Bonanza earned','已赚花红')+'</div><div class="v">'+(bon>0?fmt(bon):'—')+'</div>'+
+       '<div class="h">'+L(blocks+' block'+(blocks===1?'':'s')+' banked','已达成 '+blocks+' 个档')+'</div></div>'
+     :'<div class="stat"><div class="l">'+L('Months on target','达标月份')+'</div><div class="v">'+(hitm>0?hitm:'—')+'</div>'+
+       '<div class="h">'+L('of '+months+' months so far','共 '+months+' 个月')+'</div></div>')+
+    '<div class="stat"><div class="l">'+(P.kind==='agent'?(cc>0?L('Commission — calculated','佣金 — 计算值'):L('Commission — recorded','佣金 — 记录值')):L('Incentive pool','奖励池'))+'</div><div class="v">'+(comm>0?fmt(comm):'—')+'</div>'+
+      '<div class="h">'+(P.kind==='agent'?(cc>0?L('formula-based — payroll is authoritative','按公式计算 — 以工资单为准'):L('from the sales file — payroll is authoritative','来自销售文件 — 以工资单为准')):L('indicative total','累计（仅供参考）'))+'</div></div>'+
     '<div class="stat"><div class="l">'+L('Best month','最佳月份')+'</div><div class="v">'+(best?MN(best.name):'—')+'</div>'+
       '<div class="h">'+(best?fmt(best.actual)+L(' from '+best.n+' sales','，共 '+best.n+' 单'):'')+'</div></div>';
 }
@@ -560,26 +605,31 @@ function applyLang(){
   el('dsl').textContent=L('Daily sales — ','每日销售 — ');
   el('sl2').textContent=L('Your year','您的全年');
   el('sec2').textContent=L('Sales by month','每月销售');
-  el('ssub').textContent=L('Each dashed line is one RM 60,000 Bonanza block. Tap a month to open it.','每条虚线代表一个 RM 60,000 花红档。点击月份可查看。');
+  el('ssub').textContent=P.kind==='agent'
+    ?L('Each dashed line is one RM 60,000 Bonanza block. Tap a month to open it.','每条虚线代表一个 RM 60,000 花红档。点击月份可查看。')
+    :L('Bars are your monthly sales; green means the month hit its target. Tap a month to open it.','柱为每月销售；绿色代表该月达标。点击月份可查看。');
   el('lg1').innerHTML='<i class="key b"></i>'+L('Sales','销售');
-  el('lg2').innerHTML='<i class="key g"></i>'+L('Block banked','已达成花红档');
+  el('lg2').innerHTML='<i class="key g"></i>'+(P.kind==='agent'?L('Block banked','已达成花红档'):L('Target hit','达标'));
   el('lg3').innerHTML='<i class="key p"></i>'+L('Month in progress','进行中月份');
-  el('lg4').innerHTML='<i class="key l"></i>'+L('RM 60,000 block line','RM 60,000 档线');
+  el('lg4').innerHTML='<i class="key l"></i>'+(P.kind==='agent'?L('RM 60,000 block line','RM 60,000 档线'):L('Scale line','刻度线'));
   el('yeb').textContent=L('Year to date','年初至今');
   el('foot').textContent=L('Personal copy for '+NM+' only. Access code required; please do not forward. Figures come from the verified sales file; incentive and commission figures are indicative — payroll is authoritative.',
     '此为 '+NM+' 的个人副本，需访问码查看，请勿转发。数据来自核实的销售文件；奖励与佣金金额仅供参考 — 以工资单为准。');
   el('asof').textContent=L('Figures to ','数据截至 ')+P.as_of+L(' · private — your numbers only',' · 私密 — 仅供本人查看');
   el('langbtn').textContent=ZH?'EN':'中文';
+  if(el('glang'))el('glang').textContent=ZH?'English':'中文';
   var c='';
   P.months.forEach(function(M,i){
     c+='<button type="button" class="chip" data-m="'+(i+1)+'" aria-pressed="false">'+SHORT[i]+'</button>';});
   el('chips').innerHTML=c;
 }
-el('langbtn').addEventListener('click',function(){
+function toggleLang(){
   ZH=!ZH;try{localStorage.setItem('pmp.lang',ZH?'zh':'en');}catch(e){}
   applyLang();
   if(el('app').style.visibility==='visible'){renderYTD();render(CUR);chipFade();}
-});
+}
+el('langbtn').addEventListener('click',toggleLang);
+if(el('glang'))el('glang').addEventListener('click',toggleLang);
 applyLang();
 
 function near(node,sel){return node&&node.closest?node.closest(sel):null;}
@@ -614,6 +664,55 @@ document.addEventListener('pointerdown',function(e){
   if(node){showTip(node,e.clientX,e.clientY);setTimeout(hideTip,2200);}else hideTip();
 },{passive:true});
 addEventListener('scroll',hideTip,{passive:true});
+
+/* ---------- drill-down detail sheet ---------- */
+var sheetOpen=false;
+(function(){
+var wrap=document.createElement('div');wrap.id='sheetwrap';
+wrap.innerHTML='<div id="sheetback"></div><div id="sheet" role="dialog" aria-modal="true">'+
+'<button id="sheetclose" aria-label="'+L('Close','关闭')+'">&#10005;</button>'+
+'<h3 id="sheeth"></h3><p class="ssub" id="sheetsub"></p><div id="sheetbody"></div></div>';
+document.body.appendChild(wrap);
+function closeSheet(){wrap.className='';sheetOpen=false;document.documentElement.style.overflow='';}
+function openSheet(t,sub,html){
+el('sheeth').textContent=t;el('sheetsub').textContent=sub;
+el('sheetbody').innerHTML=html;wrap.className='open';sheetOpen=true;
+document.documentElement.style.overflow='hidden';
+el('sheet').scrollTop=0;if(el('sheetclose').focus)el('sheetclose').focus();}
+el('sheetback').addEventListener('click',closeSheet);
+el('sheetclose').addEventListener('click',closeSheet);
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&sheetOpen)closeSheet();});
+function rowsHtml(rows,withComm,M){
+var h='',tot=0,totc=0;
+rows.forEach(function(x){tot+=x[4];var cm=(x[5]||0)+(x[6]||0);totc+=cm;
+h+='<div class="srow"><div class="sk">'+esc(x[1])+' '+esc(x[2])+
+'<span class="m">'+(x[3]?esc(x[3])+' &#183; ':'')+(ZH?MN(M.name)+x[0]+'日':x[0]+' '+SHORT[M.m-1])+'</span></div>'+
+'<div class="sv">'+fmt(x[4])+(withComm&&cm>0?'<span class="m">'+L('comm ','佣金 ')+fmt(cm)+'</span>':'')+'</div></div>';});
+h+='<div class="stot"><span>'+L('Total','合计')+' &#183; '+rows.length+L(' sales',' 单')+'</span><span>'+fmt(tot)+
+(withComm&&totc>0?' &#183; '+L('comm ','佣金 ')+fmt(totc):'')+'</span></div>';
+return h;}
+function handle(elm){
+var M=P.months[CUR-1];if(!M)return;
+var S=M.sales||[];
+if(elm.hasAttribute('data-d')){var d=+elm.getAttribute('data-d');
+openSheet((ZH?MN(M.name)+d+'日':d+' '+M.name),L('Your sales that day','您当日的销售'),
+rowsHtml(S.filter(function(x){return x[0]===d;}),P.kind==='agent',M));return;}
+var k=elm.getAttribute('data-dk');
+if(k==='month'){if(!S.length)return;
+openSheet(MN(M.name),L('Every sale this month','本月全部销售'),rowsHtml(S,P.kind==='agent',M));}
+else if(k==='comm'){var cr=S.filter(function(x){return (x[5]||0)+(x[6]||0)>0;});
+if(!cr.length)return;
+openSheet(L('Commission — calculated','佣金 — 计算值'),
+L('Per sale: Net Licensing × 0.8 × your rate','每单：净执照费 × 0.8 × 您的比率'),rowsHtml(cr,true,M));}
+}
+document.addEventListener('click',function(e){
+var elm=e.target.closest?e.target.closest('[data-dk],[data-d]'):null;
+if(elm)handle(elm);});
+document.addEventListener('keydown',function(e){
+if(e.key!=='Enter'&&e.key!==' ')return;
+var elm=e.target&&e.target.closest?e.target.closest('[data-dk],[data-d]'):null;
+if(elm){e.preventDefault();handle(elm);}});
+})();
 
 /* ---------- gate ---------- */
 function unlock(){
